@@ -35,9 +35,6 @@ EXPOSE 3000
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-
-ENV DB_HOST=localhost
-ENV APP_COLOR=blue
 ENV PUBLIC_SUPABASE_URL=public_supabase_url
 ENV PUBLIC_SUPABASE_ANON_KEY=public_supabase_anon_key
 ENV DATABASE_URL=database_url

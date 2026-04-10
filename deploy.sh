@@ -1,1 +1,2 @@
-kubectl apply k8s/deployment.yml
+#!/bin/sh
+kubectl apply -f ./k8s/deployment.yaml
