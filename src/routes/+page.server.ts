@@ -4,19 +4,34 @@ import { eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import type { SavedLocation } from '$lib/types/location';
+import { getWeather } from '$lib/server/weatherApiClient';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = locals.user;
 	if (!user) {
-		return { locations: [] };
+		return { locations: [], weatherData: {} };
 	}
 
 	const record = await db.query.users.findFirst({
 		where: eq(users.userId, user.id)
 	});
 
+	const locations = (record?.data as SavedLocation[]) || [];
+	
+	const weatherPromises = locations.map(async (loc) => {
+		const weather = await getWeather(loc.name);
+		return { id: loc.id, weather };
+	});
+	
+	const weatherResults = await Promise.all(weatherPromises);
+	const weatherData = weatherResults.reduce((acc, { id, weather }) => {
+		acc[id] = weather;
+		return acc;
+	}, {} as Record<number, any>);
+
 	return {
-		locations: (record?.data as SavedLocation[]) || []
+		locations,
+		weatherData
 	};
 };
 

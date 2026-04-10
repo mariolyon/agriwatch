@@ -5,7 +5,7 @@
 
 	let { data } = $props<{ data: PageData }>();
 
-	let locations: SavedLocation[] = data.locations;
+	let locations: SavedLocation[] = $state(data.locations);
 
 	async function saveLocations() {
 		const formData = new FormData();
@@ -37,7 +37,7 @@
 		<a class="dashboard__add-btn" href="/browser">Add</a>
 	</header>
 
-	<LocationsList {locations} onremove={removeLocation} onreorder={reorderLocations} />
+	<LocationsList {locations} weatherData={data.weatherData} onremove={removeLocation} onreorder={reorderLocations} />
 </main>
 
 <style lang="postcss">

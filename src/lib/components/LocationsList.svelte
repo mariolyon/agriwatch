@@ -1,14 +1,16 @@
 <script lang="ts">
 	import Location from './Location.svelte';
 	import type { SavedLocation } from '$lib/types/location';
+	import type { Weather } from '$lib/types/weather';
 
 	interface Props {
 		locations: SavedLocation[];
+		weatherData: Record<number, Weather>;
 		onremove: (id: number) => void;
 		onreorder: (fromIndex: number, toIndex: number) => void;
 	}
 
-	let { locations, onremove, onreorder }: Props = $props();
+	let { locations, weatherData, onremove, onreorder }: Props = $props();
 
 	let draggedIndex = $state<number | null>(null);
 	let dragOverIndex = $state<number | null>(null);
@@ -95,7 +97,7 @@
 				</div>
 
 				<div class="flex-1">
-					<Location {location} />
+					<Location {location} weather={weatherData[location.id]} />
 				</div>
 
 				<button

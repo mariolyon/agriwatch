@@ -4,39 +4,13 @@
 
 	interface Props {
 		location: SavedLocation;
+		weather?: Weather;
 	}
 
-	let { location }: Props = $props();
+	let { location, weather }: Props = $props();
 
 	let locationLabel = $derived.by(() => {
 		return [location.name, location.admin1, location.country].filter(Boolean).join(', ');
-	});
-
-	let weather = $state({ temp_c: 0 });
-
-	$effect(() => {
-		let isAborted = false;
-
-		async function fetchWeather() {
-			try {
-				const res = await fetch(`/api/location-info?name=${encodeURIComponent(location.name)}`);
-				if (res.ok) {
-					const data = await res.json();
-					if (!isAborted) {
-						weather = data as Weather;
-						console.log({ data, weather });
-					}
-				}
-			} catch (e) {
-				// Ignore fetch errors
-			}
-		}
-
-		fetchWeather();
-
-		return () => {
-			isAborted = true;
-		};
 	});
 </script>
 
