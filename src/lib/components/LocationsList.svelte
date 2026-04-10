@@ -14,8 +14,18 @@
 
 	let draggedIndex = $state<number | null>(null)
 	let dragOverIndex = $state<number | null>(null)
+	let startedOnHandle = false
+
+	function handlePointerDown(e: PointerEvent) {
+		const target = e.target as HTMLElement
+		startedOnHandle = !!target.closest('.locations-list__drag-handle')
+	}
 
 	function handleDragStart(e: DragEvent, index: number) {
+		if (!startedOnHandle) {
+			e.preventDefault()
+			return
+		}
 		draggedIndex = index
 		if (e.dataTransfer) {
 			e.dataTransfer.effectAllowed = 'move'
@@ -24,18 +34,21 @@
 	}
 
 	function handleDragOver(e: DragEvent, index: number) {
+		if (draggedIndex === null) return
 		e.preventDefault()
 		if (e.dataTransfer) {
 			e.dataTransfer.dropEffect = 'move'
 		}
-		if (draggedIndex !== null && draggedIndex !== index && dragOverIndex !== index) {
+		if (draggedIndex !== index) {
 			dragOverIndex = index
 		}
 	}
 
-	function handleDragLeave(_e: DragEvent, index: number) {
-		if (dragOverIndex === index) {
-			dragOverIndex = null
+	function handleDragLeave(e: DragEvent, index: number, itemEl: HTMLElement) {
+		if (!itemEl.contains(e.relatedTarget as Node)) {
+			if (dragOverIndex === index) {
+				dragOverIndex = null
+			}
 		}
 	}
 
@@ -64,9 +77,13 @@
 					{draggedIndex === i ? 'locations-list__item--dragging' : ''}
 					{dragOverIndex === i ? 'locations-list__item--drag-over' : ''}"
 				draggable="true"
+				onpointerdown={handlePointerDown}
 				ondragstart={(e) => handleDragStart(e, i)}
 				ondragover={(e) => handleDragOver(e, i)}
-				ondragleave={(e) => handleDragLeave(e, i)}
+				ondragleave={(e) => {
+					const itemEl = e.currentTarget as HTMLElement
+					handleDragLeave(e, i, itemEl)
+				}}
 				ondrop={(e) => handleDrop(e, i)}
 				ondragend={handleDragEnd}
 				role="listitem"

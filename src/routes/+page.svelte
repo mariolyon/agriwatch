@@ -3,9 +3,9 @@
 	import type { PageData } from './$types'
 	import type { SavedLocation } from '$lib/types/location'
 
-	let { data } = $props<{ data: PageData }>()
+	let { data }: { data: PageData } = $props()
 
-	let locations: SavedLocation[] = $state(data.locations)
+	let locations: SavedLocation[] = $state.raw(data.locations)
 
 	async function saveLocations() {
 		const formData = new FormData()
