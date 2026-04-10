@@ -38,6 +38,11 @@ spec:
                 secretKeyRef:
                   name: agriwatch-env
                   key: DATABASE_URL
+            - name: WEATHER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: agriwatch-env
+                  key: WEATHER_API_KEY
           resources:
             requests:
               cpu: 100m

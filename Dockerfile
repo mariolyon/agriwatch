@@ -38,6 +38,7 @@ ENV PORT=3000
 ENV PUBLIC_SUPABASE_URL=public_supabase_url
 ENV PUBLIC_SUPABASE_ANON_KEY=public_supabase_anon_key
 ENV DATABASE_URL=database_url
+ENV WEATHER_API_KEY=weather_api_key
 
 # Run the application
 CMD ["node", "build"]
