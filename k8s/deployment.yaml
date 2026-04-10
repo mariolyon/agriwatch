@@ -23,6 +23,21 @@ spec:
               value: 'production'
             - name: PORT
               value: '3000'
+            - name: PUBLIC_SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: agriwatch-env
+                  key: PUBLIC_SUPABASE_URL
+            - name: PUBLIC_SUPABASE_ANON_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: agriwatch-env
+                  key: PUBLIC_SUPABASE_ANON_KEY
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: agriwatch-env
+                  key: DATABASE_URL
           resources:
             requests:
               cpu: 100m

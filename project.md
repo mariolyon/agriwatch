@@ -39,6 +39,7 @@ If the user does not have a session, then they should be directed to the /login 
 - should allow the drag and drop of the Location cards to allow the order to change
 - should allow the removal of a location
 - logout button should be shown at the top on the right handside.
+- Saved Locations should be retrieved using a server loader function
 
 ### Location Search screen
 
@@ -64,3 +65,7 @@ The Location component should call the Location information function, which will
 
 - Athentication is handled by Supabase, and the token should be checked whenever a route is accessed.
 - Supabase client should run only on the server.
+
+## Persistence
+Locations for each user should be saved as a JSON blob in the data field for the user record on Supabase through Drizzle.
+

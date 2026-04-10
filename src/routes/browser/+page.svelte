@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { LocationSearch, Location } from '$lib/components';
 	import type { GeocodingResult, SavedLocation } from '$lib/types/location';
-
-	const STORAGE_KEY = 'agriwatch_locations';
+	import { enhance } from '$app/forms';
 
 	let selectedLocation: SavedLocation | null = $state(null);
 
@@ -18,28 +16,6 @@
 			timezone: result.timezone
 		};
 	}
-
-	function handleAdd() {
-		if (!selectedLocation) return;
-
-		const stored = localStorage.getItem(STORAGE_KEY);
-		let locations: SavedLocation[] = [];
-		if (stored) {
-			try {
-				locations = JSON.parse(stored);
-			} catch {
-				locations = [];
-			}
-		}
-
-		// Prevent duplicates based on ID
-		if (!locations.some((loc) => loc.id === selectedLocation!.id)) {
-			locations.push(selectedLocation);
-			localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
-		}
-
-		goto('/');
-	}
 </script>
 
 <main class="location-page flex flex-1 items-center justify-center p-4">
@@ -52,9 +28,10 @@
 		{#if selectedLocation}
 			<div class="flex flex-col items-center gap-4">
 				<Location location={selectedLocation} />
-				<button type="button" class="location-page__add-btn" onclick={handleAdd}>
-					Save Location
-				</button>
+				<form method="POST" action="?/add" use:enhance>
+					<input type="hidden" name="location" value={JSON.stringify(selectedLocation)} />
+					<button type="submit" class="location-page__add-btn"> Save Location </button>
+				</form>
 			</div>
 		{/if}
 	</section>

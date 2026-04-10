@@ -1,35 +1,32 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { LocationsList } from '$lib/components';
+	import type { PageData } from './$types';
 	import type { SavedLocation } from '$lib/types/location';
 
-	const STORAGE_KEY = 'agriwatch_locations';
+	let { data } = $props<{ data: PageData }>();
 
-	function loadLocations(): SavedLocation[] {
-		if (!browser) return [];
-		const stored = localStorage.getItem(STORAGE_KEY);
-		if (!stored) return [];
-		try {
-			return JSON.parse(stored);
-		} catch {
-			return [];
-		}
+	let locations: SavedLocation[] = $state(data.locations);
+
+	$effect(() => {
+		locations = data.locations;
+	});
+
+	async function saveLocations() {
+		const formData = new FormData();
+		formData.append('locations', JSON.stringify(locations));
+
+		await fetch('?/save', {
+			method: 'POST',
+			body: formData
+		});
 	}
 
-	let locations = $state.raw<SavedLocation[]>(loadLocations());
-
-	function saveLocations() {
-		if (browser) {
-			localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
-		}
-	}
-
-	function removeLocation(id: number) {
+	async function removeLocation(id: number) {
 		locations = locations.filter((loc) => loc.id !== id);
 		saveLocations();
 	}
 
-	function reorderLocations(fromIndex: number, toIndex: number) {
+	async function reorderLocations(fromIndex: number, toIndex: number) {
 		const newLocations = [...locations];
 		const [removed] = newLocations.splice(fromIndex, 1);
 		newLocations.splice(toIndex, 0, removed);
