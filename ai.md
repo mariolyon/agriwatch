@@ -283,3 +283,14 @@ Use `<style lang="postcss">` with nesting and `@apply`:
 - Use early returns to reduce nesting.
 - Prefer `const` over `let` when the binding is never reassigned.
 - Run the **Svelte Autofixer** MCP tool on all Svelte code before finalizing.
+
+## 9. Storybook
+When components are created, a storybook story should also be created with that component.
+
+## 10. Verification
+after making changes, check that the applications works, and if not, make further changes until it works.
+
+If a problem can not be solved, ask the human for help.
+
+## 11. Projet Context
+@project.md

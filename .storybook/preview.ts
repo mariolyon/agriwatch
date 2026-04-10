@@ -1,11 +1,12 @@
 import type { Preview } from '@storybook/sveltekit'
+import '$lib/styles/app.css';
 
 const preview: Preview = {
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
   },

@@ -14,11 +14,28 @@ https://geocoding-api.open-meteo.com/v1/search?name={QUERY}&count=5&language=en&
 To get weather data, the application should make use of the apis provided by WeatherAPI.com
 
 ## App Flow
-Upon first accessing the app, and having had no settings saved in localStorage, the Location Search screen should be shown.
+The user should always start at the dashboard screen
 
-# Location Search screen
-On this screen, a text input field should be shown.
+### Dashboard screen
+- Should show a heading of: Locations
+- It should show a button of "Add". Clicking on it should redirect the browser to the "Location Search screen"
+- When there are no saved Locations, show the text: "No Locations Saved"
+- When there are saved locations, Location components should be shown in rows vertically, one under the other
+- should allow the drag and drop of the Location cards to allow the order to change
+- should allow the removal of a location
 
-When the user enters characters, a drop down of matching locations should be shown.
+### Location Search screen
+- On this screen, a text input field should be shown, and no location should be shown underneath
+- When the user enters characters, a drop down of matching locations should be shown.
+- When the user makes a selection, the name of the city should be shown on the same page, below the search field.
+- If the user selects another location, the name below the field should be updated.
+- The Location should be encapsulated in a Location component
+- there should be an add button next to the shown Location component. When it is clicked, the location will be added to the List of saved locations, and the browsers should be redirected to the Dashboard screen
 
-When the user makes a selection, the name of the city should be shown on the page.
+### Location information function
+- There should be a server route api that can provide information about a given location.
+- For now, it should take the location name and uppercase it.
+- This function should only run on the server, not the client
+
+### Location component
+The Location component should call the Location information function, which will be shown within the component.
