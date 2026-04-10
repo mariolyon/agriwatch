@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
+	import { onMount } from 'svelte'
 
 	let { form } = $props<{ form: ActionData }>()
+	let timezone = $state('')
+
+	onMount(() => {
+		timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+	})
 </script>
 
 <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -14,6 +20,7 @@
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 		<form class="space-y-6" method="POST" use:enhance>
+			<input type="hidden" name="timezone" value={timezone} />
 			{#if form?.error}
 				<div class="rounded-md bg-red-50 p-4">
 					<div class="text-sm text-red-700">{form.error}</div>

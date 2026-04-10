@@ -5,40 +5,41 @@
 	let { data, form }: { data: PageData; form: ActionData } = $props()
 </script>
 
-<main class="settings flex flex-1 flex-col p-6 max-w-2xl mx-auto w-full">
-	<header class="flex items-center justify-between mb-8">
+<main class="settings mx-auto flex w-full max-w-2xl flex-1 flex-col p-6">
+	<header class="mb-8 flex items-center justify-between">
 		<h1 class="text-2xl font-bold text-gray-900">Settings</h1>
-		<a href="/" class="text-sm font-medium text-green-600 hover:text-green-700">Back to Dashboard</a>
+		<a href="/" class="text-sm font-medium text-green-600 hover:text-green-700">Back to Dashboard</a
+		>
 	</header>
 
-	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+	<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
 		<form method="POST" use:enhance class="space-y-6">
 			{#if form?.message}
-				<div class="p-4 bg-red-50 text-red-700 rounded-md text-sm">
+				<div class="rounded-md bg-red-50 p-4 text-sm text-red-700">
 					{form.message}
 				</div>
 			{/if}
 
 			<div>
-				<div class="block text-sm font-medium text-gray-900 mb-3">Temperature Scale</div>
+				<div class="mb-3 block text-sm font-medium text-gray-900">Temperature Scale</div>
 				<div class="flex items-center space-x-6">
-					<label class="flex items-center space-x-2 cursor-pointer">
+					<label class="flex cursor-pointer items-center space-x-2">
 						<input
 							type="radio"
 							name="scale"
 							value="C"
 							checked={data.scale === 'C'}
-							class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+							class="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
 						/>
 						<span class="text-gray-700">C</span>
 					</label>
-					<label class="flex items-center space-x-2 cursor-pointer">
+					<label class="flex cursor-pointer items-center space-x-2">
 						<input
 							type="radio"
 							name="scale"
 							value="F"
 							checked={data.scale === 'F'}
-							class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+							class="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
 						/>
 						<span class="text-gray-700">F</span>
 					</label>

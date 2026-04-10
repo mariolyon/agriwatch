@@ -13,7 +13,9 @@
 		<a href="/" class="app-layout__logo text-xl font-bold">AgriWatch</a>
 		{#if session}
 			<div class="flex items-center gap-4">
-				<a href="/settings" class="text-sm font-medium text-gray-600 hover:text-gray-900">Settings</a>
+				<a href="/settings" class="text-sm font-medium text-gray-600 hover:text-gray-900"
+					>Settings</a
+				>
 				<form action="/logout" method="POST">
 					<button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900"
 						>Sign out</button
