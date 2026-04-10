@@ -5,11 +5,7 @@
 
 	let { data } = $props<{ data: PageData }>();
 
-	let locations: SavedLocation[] = $state(data.locations);
-
-	$effect(() => {
-		locations = data.locations;
-	});
+	let locations: SavedLocation[] = data.locations;
 
 	async function saveLocations() {
 		const formData = new FormData();

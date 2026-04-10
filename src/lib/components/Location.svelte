@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { SavedLocation } from '$lib/types/location';
+	import type { Weather } from '$lib/types/weather';
 
 	interface Props {
 		location: SavedLocation;
@@ -11,18 +12,19 @@
 		return [location.name, location.admin1, location.country].filter(Boolean).join(', ');
 	});
 
-	let locationInfo = $state('');
+	let weather = $state({ temp_c: 0 });
 
 	$effect(() => {
 		let isAborted = false;
 
-		async function fetchInfo() {
+		async function fetchWeather() {
 			try {
 				const res = await fetch(`/api/location-info?name=${encodeURIComponent(location.name)}`);
 				if (res.ok) {
 					const data = await res.json();
 					if (!isAborted) {
-						locationInfo = data.info;
+						weather = data as Weather;
+						console.log({ data, weather });
 					}
 				}
 			} catch (e) {
@@ -30,7 +32,7 @@
 			}
 		}
 
-		fetchInfo();
+		fetchWeather();
 
 		return () => {
 			isAborted = true;
@@ -41,8 +43,8 @@
 <div class="location flex flex-col items-center gap-2">
 	<h1 class="location__city-name text-4xl font-bold">{location.name}</h1>
 	<p class="location__city-detail text-lg">{locationLabel}</p>
-	{#if locationInfo}
-		<p class="location__info text-sm font-medium">{locationInfo}</p>
+	{#if weather}
+		<p class="location__info text-sm font-medium">{weather.temp_c}C</p>
 	{/if}
 </div>
 
