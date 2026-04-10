@@ -17,6 +17,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	})
 
 	const locations = (record?.data as SavedLocation[]) || []
+	const scale = record?.scale || 'C'
 
 	const weatherPromises = locations.map(async (loc) => {
 		const weather = await getWeather(loc.name)
@@ -35,6 +36,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	return {
 		locations,
 		weatherData,
+		scale,
 	}
 }
 

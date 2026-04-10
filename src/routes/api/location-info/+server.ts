@@ -9,6 +9,6 @@ export const GET: RequestHandler = async ({ url }) => {
 		return json({ info: '' }, { status: 400 })
 	}
 
-	const info = await getWeather(name)
+	const info = await getWeather(name, false)
 	return json(info)
 }

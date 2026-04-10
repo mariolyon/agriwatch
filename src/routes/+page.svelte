@@ -40,6 +40,7 @@
 	<LocationsList
 		{locations}
 		weatherData={data.weatherData}
+		scale={data.scale}
 		onremove={removeLocation}
 		onreorder={reorderLocations}
 	/>
