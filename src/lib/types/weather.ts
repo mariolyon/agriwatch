@@ -4,10 +4,9 @@ export interface Weather {
 }
 
 export interface Forecast {
-	max: Reading,
+	max: Reading
 	min: Reading
 }
-
 
 export interface Reading {
 	C: number

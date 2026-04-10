@@ -6,33 +6,39 @@ const API_KEY = process.env.WEATHER_API_KEY!
 
 export async function getWeather(locationName: string, forecast: boolean = true): Promise<Weather> {
 	try {
-		const days = forecast? 7: 0
-		const response = await fetch(
-			`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=${days}&q=${locationName}`
-		)
+		const days = forecast ? 7 : -1
 
+		const url = forecast
+			? `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=7&q=${locationName}`
+			: `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${locationName}`
+
+		const response = await fetch(url)
+		if (!response.ok) {
+			throw new Error(`Failed to fetch weather: ${response.status}`)
+		}
 		const data = await response.json()
+
 		const result = {
 			temp: {
 				F: Math.round(data.current.temp_f),
-				C: Math.round(data.current.temp_c)
+				C: Math.round(data.current.temp_c),
 			},
-			next: data.forecast.forecastday.map((info)=>
-				({
-					max: {C: Math.round(info.day.maxtemp_c), F: Math.round(info.day.maxtemp_f)},
-					min: {C: Math.round(info.day.mintemp_c), F: Math.round(info.day.mintemp_f)}
-				})
-			)
+			next:
+				(!data.forecast && []) ||
+				data.forecast.forecastday.map((info) => ({
+					max: { C: Math.round(info.day.maxtemp_c), F: Math.round(info.day.maxtemp_f) },
+					min: { C: Math.round(info.day.mintemp_c), F: Math.round(info.day.mintemp_f) },
+				})),
 		}
-		return result;
+		return result
 	} catch (error) {
 		console.error('Error fetching weather:', error)
 		return {
 			temp: {
 				F: 0,
-				C: 0
+				C: 0,
 			},
-			next: []
+			next: [],
 		}
 	}
 }
