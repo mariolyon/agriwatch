@@ -7,7 +7,7 @@ const API_KEY = process.env.WEATHER_API_KEY!
 export async function getWeather(locationName: string): Promise<Weather> {
 	try {
 		const response = await fetch(
-			`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${locationName}`
+			`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=0&q=${locationName}`
 		)
 
 		const data = await response.json()
