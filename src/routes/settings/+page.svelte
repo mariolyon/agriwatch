@@ -13,11 +13,6 @@
 
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 		<form method="POST" use:enhance class="space-y-6">
-			{#if form?.success}
-				<div class="p-4 bg-green-50 text-green-700 rounded-md text-sm">
-					Settings saved successfully.
-				</div>
-			{/if}
 			{#if form?.message}
 				<div class="p-4 bg-red-50 text-red-700 rounded-md text-sm">
 					{form.message}
@@ -25,7 +20,7 @@
 			{/if}
 
 			<div>
-				<label class="block text-sm font-medium text-gray-900 mb-3">Temperature Scale</label>
+				<div class="block text-sm font-medium text-gray-900 mb-3">Temperature Scale</div>
 				<div class="flex items-center space-x-6">
 					<label class="flex items-center space-x-2 cursor-pointer">
 						<input

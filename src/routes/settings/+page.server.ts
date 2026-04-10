@@ -41,6 +41,6 @@ export const actions: Actions = {
 			await db.insert(users).values({ userId: user.id, scale, data: [] })
 		}
 
-		return { success: true }
+		throw redirect(303, '/')
 	},
 }
