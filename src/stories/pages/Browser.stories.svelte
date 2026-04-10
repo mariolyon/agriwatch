@@ -1,10 +1,10 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import Location from '../../routes/location/+page.svelte';
+	import Browser from '../../routes/browser/+page.svelte';
 
 	const { Story } = defineMeta({
-		title: 'Pages/Location Search',
-		component: Location,
+		title: 'Pages/Browser',
+		component: Browser,
 		tags: ['autodocs']
 	});
 </script>
