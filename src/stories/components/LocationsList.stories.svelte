@@ -1,7 +1,7 @@
 <script module>
-	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import LocationsList from '$lib/components/LocationsList.svelte';
-	import { fn } from 'storybook/test';
+	import { defineMeta } from '@storybook/addon-svelte-csf'
+	import LocationsList from '$lib/components/LocationsList.svelte'
+	import { fn } from 'storybook/test'
 
 	const { Story } = defineMeta({
 		title: 'Components/LocationsList',
@@ -9,9 +9,9 @@
 		tags: ['autodocs'],
 		args: {
 			onremove: fn(),
-			onreorder: fn()
-		}
-	});
+			onreorder: fn(),
+		},
+	})
 </script>
 
 <Story
@@ -25,7 +25,7 @@
 				admin1: 'Land Berlin',
 				latitude: 52.52437,
 				longitude: 13.41053,
-				timezone: 'Europe/Berlin'
+				timezone: 'Europe/Berlin',
 			},
 			{
 				id: 2,
@@ -34,7 +34,7 @@
 				admin1: 'Greater London',
 				latitude: 51.50853,
 				longitude: -0.12574,
-				timezone: 'Europe/London'
+				timezone: 'Europe/London',
 			},
 			{
 				id: 3,
@@ -43,15 +43,15 @@
 				admin1: 'Tokyo',
 				latitude: 35.6895,
 				longitude: 139.69171,
-				timezone: 'Asia/Tokyo'
-			}
-		]
+				timezone: 'Asia/Tokyo',
+			},
+		],
 	}}
 />
 
 <Story
 	name="Empty"
 	args={{
-		locations: []
+		locations: [],
 	}}
 />

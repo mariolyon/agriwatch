@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { LocationSearch, Location } from '$lib/components';
-	import type { GeocodingResult, SavedLocation } from '$lib/types/location';
-	import type { Weather } from '$lib/types/weather';
-	import { enhance } from '$app/forms';
+	import { LocationSearch, Location } from '$lib/components'
+	import type { GeocodingResult, SavedLocation } from '$lib/types/location'
+	import type { Weather } from '$lib/types/weather'
+	import { enhance } from '$app/forms'
 
-	let selectedLocation: SavedLocation | null = $state(null);
-	let weather: Weather | null = $state(null);
-	let isLoadingWeather = $state(false);
+	let selectedLocation: SavedLocation | null = $state(null)
+	let weather: Weather | null = $state(null)
+	let isLoadingWeather = $state(false)
 
 	async function handleSelect(result: GeocodingResult) {
 		selectedLocation = {
@@ -16,22 +16,22 @@
 			admin1: result.admin1,
 			latitude: result.latitude,
 			longitude: result.longitude,
-			timezone: result.timezone
-		};
+			timezone: result.timezone,
+		}
 
-		isLoadingWeather = true;
+		isLoadingWeather = true
 		try {
-			const response = await fetch(`/api/location-info?name=${encodeURIComponent(result.name)}`);
+			const response = await fetch(`/api/location-info?name=${encodeURIComponent(result.name)}`)
 			if (response.ok) {
-				weather = await response.json();
+				weather = await response.json()
 			} else {
-				weather = null;
+				weather = null
 			}
 		} catch (error) {
-			console.error('Failed to fetch weather:', error);
-			weather = null;
+			console.error('Failed to fetch weather:', error)
+			weather = null
 		} finally {
-			isLoadingWeather = false;
+			isLoadingWeather = false
 		}
 	}
 </script>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+	import { enhance } from '$app/forms'
+	import type { ActionData } from './$types'
 
-	let { form } = $props<{ form: ActionData }>();
+	let { form } = $props<{ form: ActionData }>()
 </script>
 
 <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

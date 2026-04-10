@@ -1,33 +1,33 @@
 <script lang="ts">
-	import { LocationsList } from '$lib/components';
-	import type { PageData } from './$types';
-	import type { SavedLocation } from '$lib/types/location';
+	import { LocationsList } from '$lib/components'
+	import type { PageData } from './$types'
+	import type { SavedLocation } from '$lib/types/location'
 
-	let { data } = $props<{ data: PageData }>();
+	let { data } = $props<{ data: PageData }>()
 
-	let locations: SavedLocation[] = $state(data.locations);
+	let locations: SavedLocation[] = $state(data.locations)
 
 	async function saveLocations() {
-		const formData = new FormData();
-		formData.append('locations', JSON.stringify(locations));
+		const formData = new FormData()
+		formData.append('locations', JSON.stringify(locations))
 
 		await fetch('?/save', {
 			method: 'POST',
-			body: formData
-		});
+			body: formData,
+		})
 	}
 
 	async function removeLocation(id: number) {
-		locations = locations.filter((loc) => loc.id !== id);
-		saveLocations();
+		locations = locations.filter((loc) => loc.id !== id)
+		saveLocations()
 	}
 
 	async function reorderLocations(fromIndex: number, toIndex: number) {
-		const newLocations = [...locations];
-		const [removed] = newLocations.splice(fromIndex, 1);
-		newLocations.splice(toIndex, 0, removed);
-		locations = newLocations;
-		saveLocations();
+		const newLocations = [...locations]
+		const [removed] = newLocations.splice(fromIndex, 1)
+		newLocations.splice(toIndex, 0, removed)
+		locations = newLocations
+		saveLocations()
 	}
 </script>
 

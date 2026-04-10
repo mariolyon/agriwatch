@@ -1,119 +1,119 @@
 <script lang="ts">
-	import type { GeocodingResult } from '$lib/types/location';
-	import { searchLocations, formatLocationLabel } from '$lib/utils/geocoding';
+	import type { GeocodingResult } from '$lib/types/location'
+	import { searchLocations, formatLocationLabel } from '$lib/utils/geocoding'
 
 	interface Props {
-		onselect: (location: GeocodingResult) => void;
+		onselect: (location: GeocodingResult) => void
 	}
 
-	let { onselect }: Props = $props();
+	let { onselect }: Props = $props()
 
-	const uid = $props.id();
-	const inputId = `${uid}-input`;
-	const listboxId = `${uid}-listbox`;
+	const uid = $props.id()
+	const inputId = `${uid}-input`
+	const listboxId = `${uid}-listbox`
 
-	let query = $state('');
-	let results: GeocodingResult[] = $state.raw([]);
-	let isOpen = $state(false);
-	let activeIndex = $state(-1);
-	let isLoading = $state(false);
+	let query = $state('')
+	let results: GeocodingResult[] = $state.raw([])
+	let isOpen = $state(false)
+	let activeIndex = $state(-1)
+	let isLoading = $state(false)
 
-	let containerEl: HTMLDivElement;
-	let requestId = 0;
+	let containerEl: HTMLDivElement
+	let requestId = 0
 
 	let showNoResults = $derived(
 		isOpen && !isLoading && results.length === 0 && query.trim().length >= 2
-	);
+	)
 
-	let showDropdown = $derived((isOpen && results.length > 0) || showNoResults);
+	let showDropdown = $derived((isOpen && results.length > 0) || showNoResults)
 
-	let activeDescendant = $derived(activeIndex >= 0 ? `${uid}-option-${activeIndex}` : undefined);
+	let activeDescendant = $derived(activeIndex >= 0 ? `${uid}-option-${activeIndex}` : undefined)
 
 	function countryCodeToFlag(code: string): string {
 		return code
 			.toUpperCase()
 			.split('')
 			.map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
-			.join('');
+			.join('')
 	}
 
 	$effect(() => {
-		const currentQuery = query.trim();
+		const currentQuery = query.trim()
 
 		if (currentQuery.length < 2) {
-			results = [];
-			isOpen = false;
-			isLoading = false;
-			return;
+			results = []
+			isOpen = false
+			isLoading = false
+			return
 		}
 
-		isLoading = true;
-		const id = ++requestId;
-		const controller = new AbortController();
+		isLoading = true
+		const id = ++requestId
+		const controller = new AbortController()
 
 		const timeout = setTimeout(async () => {
 			try {
-				const data = await searchLocations(currentQuery, controller.signal);
-				if (id !== requestId) return;
-				results = data;
-				isOpen = true;
-				activeIndex = -1;
+				const data = await searchLocations(currentQuery, controller.signal)
+				if (id !== requestId) return
+				results = data
+				isOpen = true
+				activeIndex = -1
 			} catch (e) {
-				if (id !== requestId) return;
+				if (id !== requestId) return
 				if (!(e instanceof DOMException && e.name === 'AbortError')) {
-					results = [];
+					results = []
 				}
 			} finally {
 				if (id === requestId) {
-					isLoading = false;
+					isLoading = false
 				}
 			}
-		}, 300);
+		}, 300)
 
 		return () => {
-			clearTimeout(timeout);
-			controller.abort();
-		};
-	});
+			clearTimeout(timeout)
+			controller.abort()
+		}
+	})
 
 	function selectLocation(location: GeocodingResult) {
-		query = formatLocationLabel(location);
-		isOpen = false;
-		results = [];
-		activeIndex = -1;
-		onselect(location);
+		query = formatLocationLabel(location)
+		isOpen = false
+		results = []
+		activeIndex = -1
+		onselect(location)
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		if (!isOpen || results.length === 0) return;
+		if (!isOpen || results.length === 0) return
 
 		switch (event.key) {
 			case 'ArrowDown':
-				event.preventDefault();
-				activeIndex = (activeIndex + 1) % results.length;
-				break;
+				event.preventDefault()
+				activeIndex = (activeIndex + 1) % results.length
+				break
 			case 'ArrowUp':
-				event.preventDefault();
-				activeIndex = (activeIndex - 1 + results.length) % results.length;
-				break;
+				event.preventDefault()
+				activeIndex = (activeIndex - 1 + results.length) % results.length
+				break
 			case 'Enter':
-				event.preventDefault();
+				event.preventDefault()
 				if (activeIndex >= 0) {
-					selectLocation(results[activeIndex]);
+					selectLocation(results[activeIndex])
 				}
-				break;
+				break
 			case 'Escape':
-				event.preventDefault();
-				isOpen = false;
-				activeIndex = -1;
-				break;
+				event.preventDefault()
+				isOpen = false
+				activeIndex = -1
+				break
 		}
 	}
 
 	function handleClickOutside(event: MouseEvent) {
 		if (containerEl && !containerEl.contains(event.target as Node)) {
-			isOpen = false;
-			activeIndex = -1;
+			isOpen = false
+			activeIndex = -1
 		}
 	}
 </script>
@@ -153,7 +153,7 @@
 			bind:value={query}
 			onkeydown={handleKeydown}
 			onfocus={() => {
-				if (results.length > 0) isOpen = true;
+				if (results.length > 0) isOpen = true
 			}}
 		/>
 
@@ -180,10 +180,10 @@
 						aria-selected={index === activeIndex}
 						onclick={() => selectLocation(location)}
 						onkeydown={(e: KeyboardEvent) => {
-							if (e.key === 'Enter') selectLocation(location);
+							if (e.key === 'Enter') selectLocation(location)
 						}}
 						onmouseenter={() => {
-							activeIndex = index;
+							activeIndex = index
 						}}
 					>
 						<span class="location-search__flag" aria-hidden="true">

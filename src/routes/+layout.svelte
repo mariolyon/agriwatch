@@ -1,9 +1,9 @@
 <script lang="ts">
-	import '$lib/styles/app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import '$lib/styles/app.css'
+	import favicon from '$lib/assets/favicon.svg'
 
-	let { data, children } = $props();
-	let { session } = $derived(data);
+	let { data, children } = $props()
+	let { session } = $derived(data)
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

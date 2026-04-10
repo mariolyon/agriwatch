@@ -1,56 +1,56 @@
 <script lang="ts">
-	import Location from './Location.svelte';
-	import type { SavedLocation } from '$lib/types/location';
-	import type { Weather } from '$lib/types/weather';
+	import Location from './Location.svelte'
+	import type { SavedLocation } from '$lib/types/location'
+	import type { Weather } from '$lib/types/weather'
 
 	interface Props {
-		locations: SavedLocation[];
-		weatherData: Record<number, Weather>;
-		onremove: (id: number) => void;
-		onreorder: (fromIndex: number, toIndex: number) => void;
+		locations: SavedLocation[]
+		weatherData: Record<number, Weather>
+		onremove: (id: number) => void
+		onreorder: (fromIndex: number, toIndex: number) => void
 	}
 
-	let { locations, weatherData, onremove, onreorder }: Props = $props();
+	let { locations, weatherData, onremove, onreorder }: Props = $props()
 
-	let draggedIndex = $state<number | null>(null);
-	let dragOverIndex = $state<number | null>(null);
+	let draggedIndex = $state<number | null>(null)
+	let dragOverIndex = $state<number | null>(null)
 
 	function handleDragStart(e: DragEvent, index: number) {
-		draggedIndex = index;
+		draggedIndex = index
 		if (e.dataTransfer) {
-			e.dataTransfer.effectAllowed = 'move';
-			e.dataTransfer.setData('text/plain', index.toString());
+			e.dataTransfer.effectAllowed = 'move'
+			e.dataTransfer.setData('text/plain', index.toString())
 		}
 	}
 
 	function handleDragOver(e: DragEvent, index: number) {
-		e.preventDefault();
+		e.preventDefault()
 		if (e.dataTransfer) {
-			e.dataTransfer.dropEffect = 'move';
+			e.dataTransfer.dropEffect = 'move'
 		}
 		if (draggedIndex !== null && draggedIndex !== index && dragOverIndex !== index) {
-			dragOverIndex = index;
+			dragOverIndex = index
 		}
 	}
 
 	function handleDragLeave(_e: DragEvent, index: number) {
 		if (dragOverIndex === index) {
-			dragOverIndex = null;
+			dragOverIndex = null
 		}
 	}
 
 	function handleDrop(e: DragEvent, index: number) {
-		e.preventDefault();
+		e.preventDefault()
 		if (draggedIndex !== null && draggedIndex !== index) {
-			onreorder(draggedIndex, index);
+			onreorder(draggedIndex, index)
 		}
-		draggedIndex = null;
-		dragOverIndex = null;
+		draggedIndex = null
+		dragOverIndex = null
 	}
 
 	function handleDragEnd() {
-		draggedIndex = null;
-		dragOverIndex = null;
+		draggedIndex = null
+		dragOverIndex = null
 	}
 </script>
 
@@ -71,11 +71,7 @@
 				ondragend={handleDragEnd}
 				role="listitem"
 			>
-				<div
-					class="locations-list__drag-handle"
-					aria-hidden="true"
-					title="Drag to reorder"
-				>
+				<div class="locations-list__drag-handle" aria-hidden="true" title="Drag to reorder">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"

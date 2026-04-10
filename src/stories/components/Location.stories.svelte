@@ -1,12 +1,12 @@
 <script module>
-	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import Location from '$lib/components/Location.svelte';
+	import { defineMeta } from '@storybook/addon-svelte-csf'
+	import Location from '$lib/components/Location.svelte'
 
 	const { Story } = defineMeta({
 		title: 'Components/Location',
 		component: Location,
-		tags: ['autodocs']
-	});
+		tags: ['autodocs'],
+	})
 </script>
 
 <Story
@@ -19,7 +19,7 @@
 			admin1: 'Land Berlin',
 			latitude: 52.52437,
 			longitude: 13.41053,
-			timezone: 'Europe/Berlin'
-		}
+			timezone: 'Europe/Berlin',
+		},
 	}}
 />

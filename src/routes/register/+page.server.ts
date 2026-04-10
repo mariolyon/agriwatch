@@ -1,49 +1,49 @@
-import { fail, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
+import { fail, redirect } from '@sveltejs/kit'
+import type { Actions, PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const { session } = await locals.safeGetSession();
+	const { session } = await locals.safeGetSession()
 
 	if (session) {
-		throw redirect(303, '/');
+		throw redirect(303, '/')
 	}
 
-	return {};
-};
+	return {}
+}
 
 export const actions: Actions = {
 	default: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email') as string;
-		const password = formData.get('password') as string;
-		const passwordConfirm = formData.get('passwordConfirm') as string;
+		const formData = await request.formData()
+		const email = formData.get('email') as string
+		const password = formData.get('password') as string
+		const passwordConfirm = formData.get('passwordConfirm') as string
 
 		if (!email || !password || !passwordConfirm) {
 			return fail(400, {
 				error: 'Please fill out all fields',
-				email
-			});
+				email,
+			})
 		}
 
 		if (password !== passwordConfirm) {
 			return fail(400, {
 				error: 'Passwords do not match',
-				email
-			});
+				email,
+			})
 		}
 
 		const { error } = await supabase.auth.signUp({
 			email,
-			password
-		});
+			password,
+		})
 
 		if (error) {
 			return fail(400, {
 				error: error.message,
-				email
-			});
+				email,
+			})
 		}
 
-		throw redirect(303, '/');
-	}
-};
+		throw redirect(303, '/')
+	},
+}

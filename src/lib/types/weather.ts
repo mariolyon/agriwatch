@@ -1,3 +1,3 @@
 export interface Weather {
-  temp_c: number
+	temp_c: number
 }

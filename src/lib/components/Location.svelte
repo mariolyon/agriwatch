@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { SavedLocation } from '$lib/types/location';
-	import type { Weather } from '$lib/types/weather';
+	import type { SavedLocation } from '$lib/types/location'
+	import type { Weather } from '$lib/types/weather'
 
 	interface Props {
-		location: SavedLocation;
-		weather?: Weather;
+		location: SavedLocation
+		weather?: Weather
 	}
 
-	let { location, weather }: Props = $props();
+	let { location, weather }: Props = $props()
 
 	let locationLabel = $derived.by(() => {
-		return [location.name, location.admin1, location.country].filter(Boolean).join(', ');
-	});
+		return [location.name, location.admin1, location.country].filter(Boolean).join(', ')
+	})
 </script>
 
 <div class="location flex flex-col items-center gap-2">
