@@ -37,7 +37,12 @@
 		<a class="dashboard__add-btn" href="/browser">Add</a>
 	</header>
 
-	<LocationsList {locations} weatherData={data.weatherData} onremove={removeLocation} onreorder={reorderLocations} />
+	<LocationsList
+		{locations}
+		weatherData={data.weatherData}
+		onremove={removeLocation}
+		onreorder={reorderLocations}
+	/>
 </main>
 
 <style lang="postcss">

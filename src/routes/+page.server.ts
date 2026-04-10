@@ -17,17 +17,20 @@ export const load: PageServerLoad = async ({ locals }) => {
 	});
 
 	const locations = (record?.data as SavedLocation[]) || [];
-	
+
 	const weatherPromises = locations.map(async (loc) => {
 		const weather = await getWeather(loc.name);
 		return { id: loc.id, weather };
 	});
-	
+
 	const weatherResults = await Promise.all(weatherPromises);
-	const weatherData = weatherResults.reduce((acc, { id, weather }) => {
-		acc[id] = weather;
-		return acc;
-	}, {} as Record<number, any>);
+	const weatherData = weatherResults.reduce(
+		(acc, { id, weather }) => {
+			acc[id] = weather;
+			return acc;
+		},
+		{} as Record<number, any>
+	);
 
 	return {
 		locations,
@@ -46,10 +49,7 @@ export const actions: Actions = {
 
 		const locations = JSON.parse(locationsStr);
 
-		await db
-			.update(users)
-			.set({ data: locations })
-			.where(eq(users.userId, user.id));
+		await db.update(users).set({ data: locations }).where(eq(users.userId, user.id));
 
 		return { success: true };
 	},
@@ -70,10 +70,7 @@ export const actions: Actions = {
 		if (record) {
 			const currentLocations = (record.data as SavedLocation[]) || [];
 			const newLocations = currentLocations.filter((loc) => loc.id !== locationId);
-			await db
-				.update(users)
-				.set({ data: newLocations })
-				.where(eq(users.userId, user.id));
+			await db.update(users).set({ data: newLocations }).where(eq(users.userId, user.id));
 		}
 
 		return { success: true };
@@ -94,17 +91,14 @@ export const actions: Actions = {
 
 		if (record) {
 			const currentLocations = (record.data as SavedLocation[]) || [];
-			
+
 			const newLocations = [...currentLocations].sort((a, b) => {
 				const orderA = orderData.find((o) => o.id === a.id)?.order ?? 999;
 				const orderB = orderData.find((o) => o.id === b.id)?.order ?? 999;
 				return orderA - orderB;
 			});
 
-			await db
-				.update(users)
-				.set({ data: newLocations })
-				.where(eq(users.userId, user.id));
+			await db.update(users).set({ data: newLocations }).where(eq(users.userId, user.id));
 		}
 
 		return { success: true };

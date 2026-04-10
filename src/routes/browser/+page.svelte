@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { LocationSearch, Location } from '$lib/components';
 	import type { GeocodingResult, SavedLocation } from '$lib/types/location';
+	import type { Weather } from '$lib/types/weather';
 	import { enhance } from '$app/forms';
 
 	let selectedLocation: SavedLocation | null = $state(null);
+	let weather: Weather | null = $state(null);
+	let isLoadingWeather = $state(false);
 
-	function handleSelect(result: GeocodingResult) {
+	async function handleSelect(result: GeocodingResult) {
 		selectedLocation = {
 			id: result.id,
 			name: result.name,
@@ -15,6 +18,21 @@
 			longitude: result.longitude,
 			timezone: result.timezone
 		};
+
+		isLoadingWeather = true;
+		try {
+			const response = await fetch(`/api/location-info?name=${encodeURIComponent(result.name)}`);
+			if (response.ok) {
+				weather = await response.json();
+			} else {
+				weather = null;
+			}
+		} catch (error) {
+			console.error('Failed to fetch weather:', error);
+			weather = null;
+		} finally {
+			isLoadingWeather = false;
+		}
 	}
 </script>
 
@@ -26,13 +44,19 @@
 		</div>
 
 		{#if selectedLocation}
-			<div class="flex flex-col items-center gap-4">
-				<Location location={selectedLocation} />
-				<form method="POST" action="?/add" use:enhance>
-					<input type="hidden" name="location" value={JSON.stringify(selectedLocation)} />
-					<button type="submit" class="location-page__add-btn"> Save Location </button>
-				</form>
-			</div>
+			{#if isLoadingWeather}
+				<div class="flex flex-col items-center gap-4">
+					<p class="text-gray-500">Loading weather data...</p>
+				</div>
+			{:else}
+				<div class="flex flex-col items-center gap-4">
+					<Location location={selectedLocation} weather={weather || undefined} />
+					<form method="POST" action="?/add" use:enhance>
+						<input type="hidden" name="location" value={JSON.stringify(selectedLocation)} />
+						<button type="submit" class="location-page__add-btn"> Save Location </button>
+					</form>
+				</div>
+			{/if}
 		{/if}
 	</section>
 </main>
