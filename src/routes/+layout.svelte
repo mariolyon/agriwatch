@@ -2,14 +2,22 @@
 	import '$lib/styles/app.css';
 	import favicon from '$lib/assets/favicon.svg';
 
-	let { children } = $props();
+	let { data, children } = $props();
+	let { session } = $derived(data);
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <div class="app-layout flex min-h-screen flex-col bg-gray-50">
-	<header class="app-layout__banner flex items-center gap-2 px-6 py-4">
+	<header class="app-layout__banner flex items-center justify-between gap-2 px-6 py-4">
 		<a href="/" class="app-layout__logo text-xl font-bold">AgriWatch</a>
+		{#if session}
+			<form action="/logout" method="POST">
+				<button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900"
+					>Sign out</button
+				>
+			</form>
+		{/if}
 	</header>
 	<div class="flex-1">
 		{@render children()}

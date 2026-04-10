@@ -63,6 +63,6 @@
 	}
 
 	.dashboard__add-btn:focus-visible {
-		@apply outline-none ring-2 ring-green-300;
+		@apply ring-2 ring-green-300 outline-none;
 	}
 </style>
