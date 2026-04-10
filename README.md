@@ -1,2 +1,2 @@
-# poc-svelte-weather
+# agriwatch
 weather app
