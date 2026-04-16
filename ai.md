@@ -10,15 +10,15 @@ Use **Svelte 5 runes** exclusively. Never use legacy Svelte 4 syntax.
 
 ### Forbidden patterns
 
-| Legacy (do NOT use)      | Rune equivalent         |
-| ------------------------ | ----------------------- |
-| `export let prop`        | `let { prop } = $props()` |
-| `$: derived = x * 2`    | `let derived = $derived(x * 2)` |
+| Legacy (do NOT use)     | Rune equivalent                   |
+| ----------------------- | --------------------------------- |
+| `export let prop`       | `let { prop } = $props()`         |
+| `$: derived = x * 2`    | `let derived = $derived(x * 2)`   |
 | `$: { sideEffect() }`   | `$effect(() => { sideEffect() })` |
-| `on:click={handler}`     | `onclick={handler}`     |
-| `<slot />`               | `{@render children()}`  |
-| `<slot name="x" />`     | `{@render x()}`         |
-| `createEventDispatcher`  | Callback props          |
+| `on:click={handler}`    | `onclick={handler}`               |
+| `<slot />`              | `{@render children()}`            |
+| `<slot name="x" />`     | `{@render x()}`                   |
+| `createEventDispatcher` | Callback props                    |
 
 ### State & reactivity
 
@@ -27,25 +27,26 @@ Use **Svelte 5 runes** exclusively. Never use legacy Svelte 4 syntax.
 - Use `$derived()` for simple computed values.
 - Use `$derived.by(() => { ... })` for multi-step computations.
 - **Never** synchronize state inside `$effect` — use `$derived` instead.
-(destructured).
+  (destructured).
 - Use `$effect()` sparingly and only for side effects (DOM manipulation, subscriptions, logging). Always return a cleanup function when allocating resources.
 
 ### Props
-- Destructure component inputs with  `$props()` and provide sensible defaults.
+
+- Destructure component inputs with `$props()` and provide sensible defaults.
 - Use `$bindable()` only when two-way binding is genuinely needed.
 - Use `$props.id()` to generate unique IDs for accessibility (label/input pairs).
 - Type props with TypeScript interfaces:
 
 ```svelte
 <script lang="ts">
-  interface Props {
-    title: string;
-    count?: number;
-    onclick?: (e: MouseEvent) => void;
-    children?: import('svelte').Snippet;
-  }
+	interface Props {
+		title: string
+		count?: number
+		onclick?: (e: MouseEvent) => void
+		children?: import('svelte').Snippet
+	}
 
-  let { title, count = 0, onclick, children }: Props = $props();
+	let { title, count = 0, onclick, children }: Props = $props()
 </script>
 ```
 
@@ -55,13 +56,13 @@ Use `{#snippet}` for repeated local markup instead of extracting trivial compone
 
 ```svelte
 {#snippet row(item)}
-  <tr class="table__row">
-    <td class="table__cell">{item.name}</td>
-  </tr>
+	<tr class="table__row">
+		<td class="table__cell">{item.name}</td>
+	</tr>
 {/snippet}
 
 {#each items as item}
-  {@render row(item)}
+	{@render row(item)}
 {/each}
 ```
 
@@ -98,21 +99,21 @@ src/
 
 ```ts
 // +page.server.ts
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-  const res = await fetch(`/api/weather/${params.city}`);
-  if (!res.ok) error(res.status, 'Failed to fetch weather');
-  return { weather: await res.json() };
-};
+	const res = await fetch(`/api/weather/${params.city}`)
+	if (!res.ok) error(res.status, 'Failed to fetch weather')
+	return { weather: await res.json() }
+}
 ```
 
 - Access loaded data via `$page.data` or the `data` prop in the page component:
 
 ```svelte
 <script lang="ts">
-  import type { PageData } from './$types';
-  let { data }: { data: PageData } = $props();
+	import type { PageData } from './$types'
+	let { data }: { data: PageData } = $props()
 </script>
 ```
 
@@ -124,8 +125,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 
 ```svelte
 <form method="POST" action="?/login" use:enhance>
-  <input name="email" type="email" required />
-  <button type="submit">Log in</button>
+	<input name="email" type="email" required />
+	<button type="submit">Log in</button>
 </form>
 ```
 
@@ -164,20 +165,19 @@ We combine **Tailwind** for layout/spacing utilities with **BEM** for component-
 2. **Component identity** — Every meaningful component gets a BEM Block class.
 3. **Visual theming** — BEM modifiers + `@apply` keep design-token usage inside `<style>`.
 4. **Never** use arbitrary Tailwind values (`w-[347px]`) — define design tokens instead.
-5. **Scoped Styles:** Place BEM logic in the `<style>` blocks.  Use `@apply` to pull in Tailwind values into BEM classes to maintain design system consistency.
+5. **Scoped Styles:** Place BEM logic in the `<style>` blocks. Use `@apply` to pull in Tailwind values into BEM classes to maintain design system consistency.
 
 ### BEM naming convention
 
-| Level    | Pattern                    | Example                    |
-| -------- | -------------------------- | -------------------------- |
-| Block    | `.block`                   | `.card`                    |
-| Element  | `.block__element`          | `.card__header`            |
-| Modifier | `.block--modifier`         | `.card--expanded`          |
-| Both     | `.block__element--modifier`| `.card__button--primary`   |
+| Level    | Pattern                     | Example                  |
+| -------- | --------------------------- | ------------------------ |
+| Block    | `.block`                    | `.card`                  |
+| Element  | `.block__element`           | `.card__header`          |
+| Modifier | `.block--modifier`          | `.card--expanded`        |
+| Both     | `.block__element--modifier` | `.card__button--primary` |
 
 - Block name = component purpose (kebab-case for multi-word: `.weather-card`).
 - Never nest BEM blocks inside each other's naming (`.card__header__title` is wrong — make `.card__title` or a new block).
-
 
 ### Style block conventions
 
@@ -185,53 +185,57 @@ Use `<style lang="postcss">` with nesting and `@apply`:
 
 ```svelte
 <script lang="ts">
-  interface Props {
-    title: string;
-    variant?: 'default' | 'highlighted';
-    children?: import('svelte').Snippet;
-  }
+	interface Props {
+		title: string
+		variant?: 'default' | 'highlighted'
+		children?: import('svelte').Snippet
+	}
 
-  let { title, variant = 'default', children }: Props = $props();
+	let { title, variant = 'default', children }: Props = $props()
 </script>
 
-<article class="weather-card flex flex-col gap-3 p-4 {variant === 'highlighted' ? 'weather-card--highlighted' : ''}">
-  <h2 class="weather-card__title text-lg font-semibold">{title}</h2>
-  <div class="weather-card__body">
-    {@render children?.()}
-  </div>
+<article
+	class="weather-card flex flex-col gap-3 p-4 {variant === 'highlighted'
+		? 'weather-card--highlighted'
+		: ''}"
+>
+	<h2 class="weather-card__title text-lg font-semibold">{title}</h2>
+	<div class="weather-card__body">
+		{@render children?.()}
+	</div>
 </article>
 
 <style lang="postcss">
-  .weather-card {
-    @apply border border-gray-200 rounded-xl bg-white shadow-sm transition-shadow;
+	.weather-card {
+		@apply rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow;
 
-    &--highlighted {
-      @apply border-blue-500 shadow-md;
-    }
+		&--highlighted {
+			@apply border-blue-500 shadow-md;
+		}
 
-    &__title {
-      @apply text-gray-900;
-    }
+		&__title {
+			@apply text-gray-900;
+		}
 
-    &__body {
-      @apply text-gray-600 text-sm;
-    }
-  }
+		&__body {
+			@apply text-sm text-gray-600;
+		}
+	}
 </style>
 ```
 
 ### When to use what
 
-| Concern             | Approach             |
-| ------------------- | -------------------- |
-| Flexbox / Grid      | Tailwind in markup   |
-| Padding / Margin    | Tailwind in markup   |
-| Font size / weight  | Tailwind in markup   |
-| Colors / borders    | BEM + `@apply`       |
-| Hover / focus       | BEM + `@apply`       |
-| Animations          | BEM + `@apply`       |
-| Responsive layout   | Tailwind breakpoints |
-| Component variants  | BEM modifiers        |
+| Concern            | Approach             |
+| ------------------ | -------------------- |
+| Flexbox / Grid     | Tailwind in markup   |
+| Padding / Margin   | Tailwind in markup   |
+| Font size / weight | Tailwind in markup   |
+| Colors / borders   | BEM + `@apply`       |
+| Hover / focus      | BEM + `@apply`       |
+| Animations         | BEM + `@apply`       |
+| Responsive layout  | Tailwind breakpoints |
+| Component variants | BEM modifiers        |
 
 ---
 
@@ -285,12 +289,15 @@ Use `<style lang="postcss">` with nesting and `@apply`:
 - Run the **Svelte Autofixer** MCP tool on all Svelte code before finalizing.
 
 ## 9. Storybook
+
 When components are created, a storybook story should also be created with that component.
 
 ## 10. Verification
+
 after making changes, check that the applications works, and if not, make further changes until it works.
 
 If a problem can not be solved, ask the human for help.
 
 ## 11. Projet Context
+
 @project.md

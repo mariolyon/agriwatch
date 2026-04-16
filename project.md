@@ -52,10 +52,10 @@ If the user does not have a session, then they should be directed to the /login 
 - there should be an add button next to the shown Location component. When it is clicked, the location will be added to the List of saved locations, and the browsers should be redirected to the Dashboard screen
 
 ### Settings Page
+
 - A settings page should be shown at route: /settings
 - It should have one label: Temperature Scale, and two radio buttons, with labels: C and F
 - It should also have a Save button, that would make the temperature Scale preference saved on the database
-
 
 ### Location information function
 
@@ -73,5 +73,5 @@ The Location component should call the Location information function, which will
 - Supabase client should run only on the server.
 
 ### Persistence
-Locations for each user should be saved as a JSON blob in the data field for the user record on Supabase through Drizzle.
 
+Locations for each user should be saved as a JSON blob in the data field for the user record on Supabase through Drizzle.
