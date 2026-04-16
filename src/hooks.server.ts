@@ -1,5 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
-import { type Handle, redirect } from '@sveltejs/kit'
+import { type Handle, json, redirect } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -42,9 +42,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.user = user
 
 	// Protect routes
-	const isProtectedRoute = event.url.pathname === '/' || event.url.pathname.startsWith('/browser')
-	if (isProtectedRoute && !session) {
+	const isProtectedPage = event.url.pathname === '/' || event.url.pathname.startsWith('/browser')
+	if (isProtectedPage && !session) {
 		throw redirect(303, '/login')
+	}
+
+	if (event.url.pathname.startsWith('/api/') && !session) {
+		return json({ error: 'Unauthorized' }, { status: 401 })
 	}
 
 	return resolve(event, {
