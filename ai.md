@@ -4,6 +4,12 @@ All AI agents must follow these rules strictly. When in doubt, consult official 
 
 ---
 
+## 0. General
+
+- Do not change ai.md, Readme.md, or project.md unless I specifically request it.
+- Be brief and provide the code changes without explaining.
+- After making changes, re-run the tests to check if they pass.
+
 ## 1. Svelte 5 (Runes Only)
 
 Use **Svelte 5 runes** exclusively. Never use legacy Svelte 4 syntax.
