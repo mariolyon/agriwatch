@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { SavedLocation } from '$lib/types/location'
-	import type { Weather } from '$lib/types/weather'
+	import { Scale, type Weather } from '$lib/types/weather'
 
 	interface Props {
 		location: SavedLocation
 		weather?: Weather
-		scale?: string
+		scale?: Scale
 	}
 
-	let { location, weather, scale = 'C' }: Props = $props()
+	let { location, weather, scale = Scale.C }: Props = $props()
 
 	let locationLabel = $derived.by(() => {
 		return [location.name, location.admin1, location.country].filter(Boolean).join(', ')
@@ -24,7 +24,7 @@
 			<thead>
 				<tr class="divide-x border-gray-200">
 					<th class="border-gray-200 px-4 py-0 text-left">Now</th>
-					{#each weather.next as forecast, i}
+					{#each weather.next as forecast, i ('head_' + i)}
 						<th class="border-gray-200 px-4 py-0 text-left">+{i + 1} day</th>
 					{/each}
 				</tr>
@@ -32,11 +32,13 @@
 			<tbody>
 				<tr class="divide-x border-gray-200">
 					<td class="border-gray-200 px-4 py-0 text-left">
-						{weather.temp[scale]}{' '}{scale}
+						{weather.temp[scale]}
+						{scale}
 					</td>
-					{#each weather.next as forecast, i}
-						<td class="border-gray-200 px-4 py-0 text-left"
-							>{forecast.min[scale]}{' '} - {forecast.max[scale]}{' '}{scale}
+					{#each weather.next as forecast, i ('day' + i)}
+						<td class="border-gray-200 px-4 py-0 text-left">
+							{forecast.min[scale]} - {forecast.max[scale]}
+							{scale}
 						</td>
 					{/each}
 				</tr>
@@ -50,10 +52,6 @@
 
 	.location__city-name {
 		@apply text-green-700;
-	}
-
-	.location__city-detail {
-		@apply text-gray-500;
 	}
 
 	.location__info {

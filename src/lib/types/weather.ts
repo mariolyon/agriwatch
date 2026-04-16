@@ -9,6 +9,10 @@ export interface Forecast {
 }
 
 export interface Reading {
-	C: number
-	F: number
+	[Scale.C]: number
+	[Scale.F]: number
+}
+
+export enum Scale {
+	C, F
 }
