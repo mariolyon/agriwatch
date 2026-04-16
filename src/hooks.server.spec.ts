@@ -50,6 +50,33 @@ describe('hooks.server', () => {
 		}
 	})
 
+	it('returns 401 for unauthenticated API requests', async () => {
+		vi.mocked(createServerClient).mockReturnValue({
+			auth: {
+				getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+				getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+			},
+		} as any)
+
+		const event = {
+			url: new URL('http://localhost/api/location-info'),
+			locals: {},
+			cookies: {
+				getAll: vi.fn().mockReturnValue([]),
+				set: vi.fn(),
+			},
+		} as unknown as Parameters<typeof handle>[0]['event']
+
+		const resolve = vi.fn()
+
+		const result = await handle({ event, resolve })
+
+		expect(resolve).not.toHaveBeenCalled()
+		expect(result.status).toBe(401)
+		const data = await result.json()
+		expect(data).toEqual({ error: 'Unauthorized' })
+	})
+
 	it('allows authenticated users to access protected routes', async () => {
 		vi.mocked(createServerClient).mockReturnValue({
 			auth: {
