@@ -27,3 +27,4 @@ storybook-static
 k8s/secret.yaml
 .agents/skills
 .cursor
+coverage
