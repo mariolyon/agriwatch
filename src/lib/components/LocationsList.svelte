@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Location from './Location.svelte'
-	import GripVerticalIcon from './icons/GripVerticalIcon.svelte'
 	import XIcon from './icons/XIcon.svelte'
 	import type { SavedLocation } from '$lib/types/location'
 	import type { Weather } from '$lib/types/weather'
@@ -17,15 +16,16 @@
 
 	let draggedIndex = $state<number | null>(null)
 	let dragOverIndex = $state<number | null>(null)
-	let startedOnHandle = false
+	let startedOnDraggable = false
 
 	function handlePointerDown(e: PointerEvent) {
 		const target = e.target as HTMLElement
-		startedOnHandle = !!target.closest('.locations-list__drag-handle')
+		startedOnDraggable =
+			!target.closest('.location__info') && !target.closest('.locations-list__remove-btn')
 	}
 
 	function handleDragStart(e: DragEvent, index: number) {
-		if (!startedOnHandle) {
+		if (!startedOnDraggable) {
 			e.preventDefault()
 			return
 		}
@@ -76,7 +76,7 @@
 	<div class="locations-list mt-8 flex flex-col gap-6" role="list">
 		{#each locations as location, i (location.id)}
 			<div
-				class="locations-list__item relative flex items-start gap-4 rounded-xl p-4 shadow-sm transition-colors
+				class="locations-list__item relative rounded-xl p-4 shadow-sm transition-colors
 					{draggedIndex === i ? 'locations-list__item--dragging' : ''}
 					{dragOverIndex === i ? 'locations-list__item--drag-over' : ''}"
 				draggable="true"
@@ -91,13 +91,7 @@
 				ondragend={handleDragEnd}
 				role="listitem"
 			>
-				<div class="locations-list__drag-handle" aria-hidden="true" title="Drag to reorder">
-					<GripVerticalIcon />
-				</div>
-
-				<div class="flex-1">
-					<Location {location} weather={weatherData[location.id]} {scale} />
-				</div>
+			<Location {location} weather={weatherData[location.id]} {scale} />
 
 			<button
 				class="locations-list__remove-btn absolute top-2 right-2 rounded-full p-1 transition-colors"
@@ -131,10 +125,6 @@
 
 	.locations-list__item--drag-over {
 		@apply border-blue-500 ring-2 ring-blue-200;
-	}
-
-	.locations-list__drag-handle {
-		@apply cursor-grab text-gray-400 hover:text-gray-600 active:cursor-grabbing;
 	}
 
 	.locations-list__remove-btn {
