@@ -14,5 +14,6 @@ export interface Reading {
 }
 
 export enum Scale {
-	C, F
+	C = 'C',
+	F = 'F'
 }
