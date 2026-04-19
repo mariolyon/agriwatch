@@ -32,9 +32,8 @@
 </script>
 
 <main class="dashboard flex flex-1 flex-col p-6">
-	<header class="flex items-center justify-between">
-		<h1 class="dashboard__heading text-2xl font-bold">Locations</h1>
-		<a class="dashboard__add-btn" href="/browser">Add</a>
+	<header class="flex items-center justify-end">
+		<a class="dashboard__add-btn" href="/browser">Add Location</a>
 	</header>
 
 	<LocationsList
@@ -48,10 +47,6 @@
 
 <style lang="postcss">
 	@reference "tailwindcss";
-
-	.dashboard__heading {
-		@apply text-gray-900;
-	}
 
 	.dashboard__add-btn {
 		@apply rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors;

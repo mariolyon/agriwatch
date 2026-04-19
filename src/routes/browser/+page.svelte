@@ -38,7 +38,6 @@
 
 <main class="location-page flex flex-1 items-center justify-center p-4">
 	<section class="flex w-full max-w-md flex-col items-center gap-6 text-center">
-		<p class="location-page__subtitle text-lg">Find your field's location to get started</p>
 		<div class="w-full">
 			<LocationSearch onselect={handleSelect} />
 		</div>
@@ -53,7 +52,7 @@
 					<Location location={selectedLocation} weather={weather || undefined} />
 					<form method="POST" action="?/add" use:enhance>
 						<input type="hidden" name="location" value={JSON.stringify(selectedLocation)} />
-						<button type="submit" class="location-page__add-btn"> Save Location </button>
+						<button type="submit" class="location-page__add-btn"> Add to Dashboard </button>
 					</form>
 				</div>
 			{/if}

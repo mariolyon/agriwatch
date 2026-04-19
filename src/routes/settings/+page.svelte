@@ -6,8 +6,7 @@
 </script>
 
 <main class="settings mx-auto flex w-full max-w-2xl flex-1 flex-col p-6">
-	<header class="mb-8 flex items-center justify-between">
-		<h1 class="text-2xl font-bold text-gray-900">Settings</h1>
+	<header class="mb-8 flex items-center justify-end">
 		<a href="/" class="text-sm font-medium text-green-600 hover:text-green-700">Back to Dashboard</a
 		>
 	</header>

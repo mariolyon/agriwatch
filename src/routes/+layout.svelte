@@ -2,15 +2,30 @@
 	import '$lib/styles/app.css'
 	import favicon from '$lib/assets/favicon.svg'
 
+	import { page } from '$app/state'
+
 	let { data, children } = $props()
 	let { session } = $derived(data)
+
+	const titles: Record<string, string> = {
+		'/': 'Dashboard',
+		'/browser': 'Location Search',
+		'/settings': 'Settings',
+	}
+	let pageTitle = $derived(titles[page.url.pathname])
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <div class="app-layout flex min-h-screen flex-col bg-gray-50">
 	<header class="app-layout__banner flex items-center justify-between gap-2 px-6 py-4">
-		<a href="/" class="app-layout__logo text-xl font-bold">AgriWatch</a>
+		<div class="flex items-center gap-2">
+			<a href="/" class="app-layout__logo text-xl font-bold">AgriWatch</a>
+			{#if pageTitle}
+				<span class="text-xl text-gray-400">/</span>
+				<span class="text-xl font-semibold text-gray-700">{pageTitle}</span>
+			{/if}
+		</div>
 		{#if session}
 			<div class="flex items-center gap-4">
 				<a href="/settings" class="text-sm font-medium text-gray-600 hover:text-gray-900"
