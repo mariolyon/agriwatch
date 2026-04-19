@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { GeocodingResult } from '$lib/types/location'
 	import { searchLocations, formatLocationLabel } from '$lib/utils/geocoding'
+	import SearchIcon from './icons/SearchIcon.svelte'
 
 	interface Props {
 		onselect: (location: GeocodingResult) => void
@@ -122,22 +123,7 @@
 
 <div class="location-search" bind:this={containerEl}>
 	<div class="location-search__input-wrapper flex items-center gap-2">
-		<svg
-			class="location-search__icon"
-			xmlns="http://www.w3.org/2000/svg"
-			width="20"
-			height="20"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-		>
-			<circle cx="11" cy="11" r="8" />
-			<path d="m21 21-4.35-4.35" />
-		</svg>
+		<SearchIcon class="shrink-0 text-gray-400" width="20" height="20" aria-hidden="true" />
 
 		<input
 			id={inputId}
@@ -218,10 +204,6 @@
 
 	.location-search__input-wrapper:focus-within {
 		@apply border-blue-500 ring-2 ring-blue-200;
-	}
-
-	.location-search__icon {
-		@apply shrink-0 text-gray-400;
 	}
 
 	.location-search__input {

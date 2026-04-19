@@ -20,23 +20,23 @@
 		<span class="location__city-name text-3xl font-bold">{location.name}</span>
 	</h1>
 	{#if weather}
-		<table class="location__info border border-gray-200 p-2 text-sm font-medium">
+		<table class="location__info border border-gray-200 p-1 text-sm font-medium sm:p-2">
 			<thead>
 				<tr class="divide-x border-gray-200">
-					<th class="border-gray-200 px-4 py-0 text-left">Now</th>
+					<th class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">Now</th>
 					{#each weather.next as forecast, i ('head_' + i)}
-						<th class="border-gray-200 px-4 py-0 text-left">+{i + 1} day</th>
+						<th class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">+{i + 1} day</th>
 					{/each}
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="divide-x border-gray-200">
-					<td class="border-gray-200 px-4 py-0 text-left">
+					<td class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">
 						{weather.temp[scale]}
 						{scale}
 					</td>
 					{#each weather.next as forecast, i ('day' + i)}
-						<td class="border-gray-200 px-4 py-0 text-left">
+						<td class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">
 							{forecast.min[scale]} - {forecast.max[scale]}
 							{scale}
 						</td>
