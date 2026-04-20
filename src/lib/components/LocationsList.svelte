@@ -71,12 +71,12 @@
 </script>
 
 {#if locations.length === 0}
-	<p class="locations-list__empty mt-8 text-center">No Locations Saved</p>
+	<p class="locations-list__empty mt-4 text-center">No Locations Saved</p>
 {:else}
-	<div class="locations-list mt-8 flex flex-col gap-6" role="list">
+	<div class="locations-list mt-4 flex min-w-fit flex-col gap-3" role="list">
 		{#each locations as location, i (location.id)}
 			<div
-				class="locations-list__item relative rounded-xl p-4 shadow-sm transition-colors
+				class="locations-list__item relative
 					{draggedIndex === i ? 'locations-list__item--dragging' : ''}
 					{dragOverIndex === i ? 'locations-list__item--drag-over' : ''}"
 				draggable="true"
@@ -91,10 +91,10 @@
 				ondragend={handleDragEnd}
 				role="listitem"
 			>
-			<Location {location} weather={weatherData[location.id]} {scale} />
+				<Location {location} weather={weatherData[location.id]} {scale} />
 
-			<button
-				class="locations-list__remove-btn absolute top-2 right-2 rounded-full p-1 transition-colors"
+				<button
+					class="locations-list__remove-btn absolute top-2 right-2 rounded-full p-1 transition-colors"
 					onclick={() => {
 						if (confirm(`Remove ${location.name}?`)) onremove(location.id)
 					}}
@@ -112,7 +112,7 @@
 	@reference "tailwindcss";
 
 	.locations-list__item {
-		@apply cursor-grab border border-gray-200 bg-white;
+		@apply cursor-grab;
 	}
 
 	.locations-list__item:active {

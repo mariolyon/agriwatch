@@ -31,7 +31,7 @@
 	}
 </script>
 
-<main class="dashboard flex flex-1 flex-col p-6">
+<main class="dashboard flex flex-1 flex-col p-3 sm:p-4">
 	<header class="flex items-center justify-end">
 		<a class="dashboard__add-btn" href="/browser">Add Location</a>
 	</header>
