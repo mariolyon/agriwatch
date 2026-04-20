@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { SavedLocation } from '$lib/types/location'
 	import { Scale, type Weather } from '$lib/types/weather'
+	import Temperature from './Temperature.svelte'
 
 	interface Props {
 		location: SavedLocation
@@ -32,12 +33,12 @@
 			<tbody>
 				<tr class="divide-x border-gray-200">
 					<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
-						{weather.temp[scale]}
+						<Temperature value={weather.temp[scale]} />
 						<span class="hidden md:inline">{scale}</span>
 					</td>
 					{#each weather.next as forecast, i ('day' + i)}
 						<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
-							{forecast.min[scale]} - {forecast.max[scale]}
+							<Temperature value={forecast.min[scale]} /> - <Temperature value={forecast.max[scale]} />
 							<span class="hidden md:inline">{scale}</span>
 						</td>
 					{/each}
