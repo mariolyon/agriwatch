@@ -52,7 +52,11 @@
 				</div>
 			{:else}
 				<div class="flex flex-col items-center gap-4">
-					<Location location={selectedLocation} weather={weather || undefined} scale={scaleState?.current} />
+					<Location
+						location={selectedLocation}
+						weather={weather || undefined}
+						scale={scaleState?.current}
+					/>
 					<form method="POST" action="?/add" use:enhance>
 						<input type="hidden" name="location" value={JSON.stringify(selectedLocation)} />
 						<button type="submit" class="location-page__add-btn"> Add to Dashboard </button>

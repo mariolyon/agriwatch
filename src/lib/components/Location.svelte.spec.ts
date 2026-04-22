@@ -12,7 +12,16 @@ describe('Location component', () => {
 			admin1: 'England',
 		}
 
-		const { getByText } = render(Location, { location: { ...location, country: 'UK', admin1: 'England', latitude: 0, longitude: 0, timezone: 'GMT' } })
+		const { getByText } = render(Location, {
+			location: {
+				...location,
+				country: 'UK',
+				admin1: 'England',
+				latitude: 0,
+				longitude: 0,
+				timezone: 'GMT',
+			},
+		})
 
 		await expect.element(getByText('London')).toBeVisible()
 	})
@@ -28,7 +37,11 @@ describe('Location component', () => {
 			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 } }],
 		}
 
-		const { getByText } = render(Location, { location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' }, weather, scale: Scale.C })
+		const { getByText } = render(Location, {
+			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
+			weather,
+			scale: Scale.C,
+		})
 
 		await expect.element(getByText('20 C')).toBeVisible()
 		await expect.element(getByText('+1 day')).toBeVisible()
@@ -46,7 +59,11 @@ describe('Location component', () => {
 			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 } }],
 		}
 
-		const { getByText } = render(Location, { location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' }, weather, scale: Scale.F })
+		const { getByText } = render(Location, {
+			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
+			weather,
+			scale: Scale.F,
+		})
 
 		await expect.element(getByText('68 F')).toBeVisible()
 		await expect.element(getByText('59 - 77 F')).toBeVisible()
@@ -58,7 +75,16 @@ describe('Location component', () => {
 			name: 'London',
 		}
 
-		const { getByText } = render(Location, { location: { ...location, country: 'UK', admin1: 'England', latitude: 0, longitude: 0, timezone: 'GMT' } })
+		const { getByText } = render(Location, {
+			location: {
+				...location,
+				country: 'UK',
+				admin1: 'England',
+				latitude: 0,
+				longitude: 0,
+				timezone: 'GMT',
+			},
+		})
 
 		await expect.element(getByText('Now')).not.toBeInTheDocument()
 	})

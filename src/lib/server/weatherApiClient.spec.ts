@@ -8,7 +8,10 @@ describe('weatherApiClient', () => {
 
 	it('fetches current weather successfully', async () => {
 		global.fetch = vi.fn().mockImplementation(async (url: string | URL | Request) => {
-			if (url === `https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=London`) {
+			if (
+				url ===
+				`https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=London`
+			) {
 				return {
 					ok: true,
 					json: async () => ({
@@ -36,7 +39,10 @@ describe('weatherApiClient', () => {
 
 	it('fetches weather forecast successfully', async () => {
 		global.fetch = vi.fn().mockImplementation(async (url: string | URL | Request) => {
-			if (url === `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&days=7&q=London`) {
+			if (
+				url ===
+				`https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&days=7&q=London`
+			) {
 				return {
 					ok: true,
 					json: async () => ({
@@ -76,7 +82,10 @@ describe('weatherApiClient', () => {
 
 	it('returns default values on fetch error', async () => {
 		global.fetch = vi.fn().mockImplementation(async (url: string | URL | Request) => {
-			if (url === `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&days=7&q=London`) {
+			if (
+				url ===
+				`https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&days=7&q=London`
+			) {
 				return {
 					ok: false,
 					status: 500,
@@ -85,7 +94,7 @@ describe('weatherApiClient', () => {
 			return { ok: false, status: 404 } as Response
 		})
 
-		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
 		const result = await getWeather('London')
 

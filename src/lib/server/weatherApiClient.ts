@@ -1,6 +1,6 @@
 import type { Weather } from '$lib/types/weather'
 import * as dotenv from 'dotenv'
-import { Scale } from '$lib/types/weather';
+import { Scale } from '$lib/types/weather'
 dotenv.config()
 
 const API_KEY = process.env.WEATHER_API_KEY!

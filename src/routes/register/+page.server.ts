@@ -43,8 +43,8 @@ export const actions: Actions = {
 			email,
 			password,
 			options: {
-				emailRedirectTo: url.origin
-			}
+				emailRedirectTo: url.origin,
+			},
 		})
 
 		if (error) {
