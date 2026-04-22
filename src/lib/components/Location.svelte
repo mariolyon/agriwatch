@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte'
 	import type { SavedLocation } from '$lib/types/location'
 	import { Scale, type Weather } from '$lib/types/weather'
 	import Temperature from './Temperature.svelte'
@@ -7,9 +8,10 @@
 		location: SavedLocation
 		weather?: Weather
 		scale?: Scale
+		actions?: Snippet
 	}
 
-	let { location, weather, scale = Scale.C }: Props = $props()
+	let { location, weather, scale = Scale.C, actions }: Props = $props()
 
 	let locationLabel = $derived.by(() => {
 		return [location.name, location.admin1, location.country].filter(Boolean).join(', ')
@@ -19,9 +21,15 @@
 <div class="location">
 	<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 	{#if weather}
-		<table
-			class="location__info w-full table-fixed border border-gray-200 p-1 text-sm font-medium sm:p-2"
-		>
+		<div class="flex w-full flex-col gap-2">
+			{#if actions}
+				<div class="flex justify-end">
+					{@render actions()}
+				</div>
+			{/if}
+			<table
+				class="location__info w-full table-fixed border border-gray-200 p-1 text-sm font-medium sm:p-2"
+			>
 			<thead>
 				<tr class="divide-x border-gray-200">
 					<th class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">Now</th>
@@ -48,7 +56,8 @@
 					{/each}
 				</tr>
 			</tbody>
-		</table>
+			</table>
+		</div>
 	{/if}
 </div>
 
@@ -58,7 +67,7 @@
 	.location {
 		@apply border border-gray-200 bg-white transition-colors;
 		@apply min-w-160;
-		@apply grid grid-cols-1 items-center gap-4 rounded-xl p-4 pr-12 shadow-sm sm:grid-cols-[12rem_1fr];
+		@apply grid grid-cols-1 items-start gap-4 rounded-xl p-4 shadow-sm sm:grid-cols-[12rem_1fr];
 	}
 
 	.location__city-name {

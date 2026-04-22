@@ -52,34 +52,36 @@
 	{ondragend}
 	role="listitem"
 >
-	<Location {location} {weather} {scale} />
-
-	<div class="locations-list__actions absolute top-2 right-2">
-		<button
-			class="locations-list__menu-btn rounded-full p-1 text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
-			onclick={ontogglemenu}
-			aria-label="Menu for {location.name}"
-			title="Menu for {location.name}"
-		>
-			<MoreHorizontalIcon />
-		</button>
-
-		{#if isMenuOpen}
-			<div
-				class="absolute right-0 top-full z-10 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-			>
+	<Location {location} {weather} {scale}>
+		{#snippet actions()}
+			<div class="locations-list__actions relative">
 				<button
-					class="w-full rounded-md px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 focus:outline-none"
-					onclick={(e) => {
-						e.stopPropagation()
-						onremove(location.id)
-					}}
+					class="locations-list__menu-btn rounded-full p-1 text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+					onclick={ontogglemenu}
+					aria-label="Menu for {location.name}"
+					title="Menu for {location.name}"
 				>
-					Delete
+					<MoreHorizontalIcon />
 				</button>
+
+				{#if isMenuOpen}
+					<div
+						class="absolute right-0 top-full z-10 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+					>
+						<button
+							class="w-full rounded-md px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 focus:outline-none"
+							onclick={(e) => {
+								e.stopPropagation()
+								onremove(location.id)
+							}}
+						>
+							Delete
+						</button>
+					</div>
+				{/if}
 			</div>
-		{/if}
-	</div>
+		{/snippet}
+	</Location>
 </div>
 
 <style lang="postcss">
