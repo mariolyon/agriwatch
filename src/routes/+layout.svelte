@@ -10,12 +10,8 @@
 	let { data, children } = $props()
 	let { session } = $derived(data)
 
-	let scaleState = $state({ current: data.scale as Scale })
+	let scaleState = $state({ current: data.scale })
 	setContext('scaleState', scaleState)
-
-	$effect(() => {
-		scaleState.current = data.scale as Scale
-	})
 
 	const titles: Record<string, string> = {
 		'/': 'Dashboard',
@@ -43,8 +39,10 @@
 						method="POST"
 						class="inline"
 						use:enhance={({ formData }) => {
+							console.log(`Form submission started... ${scaleState.current}`)
 							const previousScale = scaleState.current
 							scaleState.current = formData.get('scale') as Scale
+
 							return async ({ result, update }) => {
 								if (result.type === 'error' || result.type === 'failure') {
 									scaleState.current = previousScale
@@ -53,13 +51,13 @@
 							}
 						}}
 					>
-						<input type="hidden" name="scale" value={scaleState.current} />
+						<input type="hidden" name="scale" value={scaleState.current === 'C' ? 'F' : 'C'} />
 						<button
 							type="submit"
 							class="hover:text-gray-900 {scaleState.current === 'C' ? 'font-bold' : ''}"
 							disabled={scaleState.current === 'C'}>C</button
 						>
-						<span class="mx-1">|</span>
+						<span class="m-0">|</span>
 						<button
 							type="submit"
 							class="hover:text-gray-900 {scaleState.current === 'F' ? 'font-bold' : ''}"
