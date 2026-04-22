@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { LocationSearch, Location } from '$lib/components'
 	import type { GeocodingResult, SavedLocation } from '$lib/types/location'
-	import type { Weather } from '$lib/types/weather'
+	import { Scale, type Weather } from '$lib/types/weather'
 	import { enhance } from '$app/forms'
+	import { getContext } from 'svelte'
 
 	let selectedLocation: SavedLocation | null = $state(null)
 	let weather: Weather | null = $state(null)
 	let isLoadingWeather = $state(false)
+
+	let scaleState = getContext<{ current: Scale }>('scaleState')
 
 	async function handleSelect(result: GeocodingResult) {
 		selectedLocation = {
@@ -49,7 +52,7 @@
 				</div>
 			{:else}
 				<div class="flex flex-col items-center gap-4">
-					<Location location={selectedLocation} weather={weather || undefined} />
+					<Location location={selectedLocation} weather={weather || undefined} scale={scaleState?.current} />
 					<form method="POST" action="?/add" use:enhance>
 						<input type="hidden" name="location" value={JSON.stringify(selectedLocation)} />
 						<button type="submit" class="location-page__add-btn"> Add to Dashboard </button>

@@ -24,7 +24,7 @@ export async function getWeather(locationName: string, forecast: boolean = true)
 			},
 			next:
 				(!data.forecast && []) ||
-				data.forecast.forecastday.map((info) => ({
+				data.forecast.forecastday.map((info: any) => ({
 					max: { C: Math.round(info.day.maxtemp_c), F: Math.round(info.day.maxtemp_f) },
 					min: { C: Math.round(info.day.mintemp_c), F: Math.round(info.day.mintemp_f) },
 				})),

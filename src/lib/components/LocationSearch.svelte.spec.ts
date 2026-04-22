@@ -17,7 +17,7 @@ describe('LocationSearch component', () => {
 	})
 
 	it('shows loading spinner when typing and then displays results', async () => {
-		const mockResults = [{ id: 1, name: 'London', country: 'United Kingdom', country_code: 'GB' }]
+		const mockResults = [{ id: 1, name: 'London', country: 'United Kingdom', country_code: 'GB', latitude: 0, longitude: 0, feature_code: '', timezone: 'GMT', country_id: 1 }]
 
 		vi.spyOn(geocoding, 'searchLocations').mockResolvedValue(mockResults)
 
@@ -35,7 +35,7 @@ describe('LocationSearch component', () => {
 	})
 
 	it('calls onselect when a location is clicked', async () => {
-		const mockResults = [{ id: 1, name: 'London', country: 'United Kingdom', country_code: 'GB' }]
+		const mockResults = [{ id: 1, name: 'London', country: 'United Kingdom', country_code: 'GB', latitude: 0, longitude: 0, feature_code: '', timezone: 'GMT', country_id: 1 }]
 
 		vi.spyOn(geocoding, 'searchLocations').mockResolvedValue(mockResults)
 

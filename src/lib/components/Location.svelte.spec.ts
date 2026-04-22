@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import Location from './Location.svelte'
+import { Scale } from '$lib/types/weather'
 
 describe('Location component', () => {
 	it('renders location name correctly', async () => {
@@ -11,7 +12,7 @@ describe('Location component', () => {
 			admin1: 'England',
 		}
 
-		const { getByText } = render(Location, { location })
+		const { getByText } = render(Location, { location: { ...location, country: 'UK', admin1: 'England', latitude: 0, longitude: 0, timezone: 'GMT' } })
 
 		await expect.element(getByText('London')).toBeVisible()
 	})
@@ -27,7 +28,7 @@ describe('Location component', () => {
 			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 } }],
 		}
 
-		const { getByText } = render(Location, { location, weather, scale: 'C' })
+		const { getByText } = render(Location, { location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' }, weather, scale: Scale.C })
 
 		await expect.element(getByText('20 C')).toBeVisible()
 		await expect.element(getByText('+1 day')).toBeVisible()
@@ -45,7 +46,7 @@ describe('Location component', () => {
 			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 } }],
 		}
 
-		const { getByText } = render(Location, { location, weather, scale: 'F' })
+		const { getByText } = render(Location, { location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' }, weather, scale: Scale.F })
 
 		await expect.element(getByText('68 F')).toBeVisible()
 		await expect.element(getByText('59 - 77 F')).toBeVisible()
@@ -57,7 +58,7 @@ describe('Location component', () => {
 			name: 'London',
 		}
 
-		const { getByText } = render(Location, { location })
+		const { getByText } = render(Location, { location: { ...location, country: 'UK', admin1: 'England', latitude: 0, longitude: 0, timezone: 'GMT' } })
 
 		await expect.element(getByText('Now')).not.toBeInTheDocument()
 	})

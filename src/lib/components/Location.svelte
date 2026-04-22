@@ -44,14 +44,12 @@
 				<tr class="divide-x border-gray-200">
 					<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
 						<Temperature value={weather.temp[scale]} />
-						<span class="hidden md:inline">{scale}</span>
 					</td>
 					{#each weather.next as forecast, i ('day' + i)}
 						<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
 							<Temperature value={forecast.min[scale]} /> - <Temperature
 								value={forecast.max[scale]}
 							/>
-							<span class="hidden md:inline">{scale}</span>
 						</td>
 					{/each}
 				</tr>

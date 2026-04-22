@@ -1,16 +1,26 @@
 <script lang="ts">
 	import '$lib/styles/app.css'
 	import favicon from '$lib/assets/favicon.svg'
+	import { enhance } from '$app/forms'
+	import { setContext } from 'svelte'
+	import { Scale } from '$lib/types/weather'
 
 	import { page } from '$app/state'
 
 	let { data, children } = $props()
 	let { session } = $derived(data)
 
+	let initialScale = data.scale as Scale
+	let scaleState = $state({ current: initialScale })
+	setContext('scaleState', scaleState)
+
+	$effect(() => {
+		scaleState.current = data.scale as Scale
+	})
+
 	const titles: Record<string, string> = {
 		'/': 'Dashboard',
 		'/browser': 'Location Search',
-		'/settings': 'Settings',
 	}
 	let pageTitle = $derived(titles[page.url.pathname])
 </script>
@@ -28,9 +38,35 @@
 		</div>
 		{#if session}
 			<div class="flex items-center gap-4">
-				<a href="/settings" class="text-sm font-medium text-gray-600 hover:text-gray-900"
-					>Settings</a
-				>
+				<div class="flex items-center text-sm font-medium text-gray-600">
+					<form action="/scale" method="POST" class="inline" use:enhance={({ formData }) => {
+						const previousScale = scaleState.current;
+						scaleState.current = formData.get('scale') as Scale;
+						return async ({ result, update }) => {
+							if (result.type === 'error' || result.type === 'failure') {
+								scaleState.current = previousScale;
+							}
+							await update({ invalidateAll: false });
+						};
+					}}>
+						<input type="hidden" name="scale" value="C" />
+						<button type="submit" class="hover:text-gray-900 {scaleState.current === 'C' ? 'font-bold' : ''}" disabled={scaleState.current === 'C'}>C</button>
+					</form>
+					<span class="mx-1">|</span>
+					<form action="/scale" method="POST" class="inline" use:enhance={({ formData }) => {
+						const previousScale = scaleState.current;
+						scaleState.current = formData.get('scale') as Scale;
+						return async ({ result, update }) => {
+							if (result.type === 'error' || result.type === 'failure') {
+								scaleState.current = previousScale;
+							}
+							await update({ invalidateAll: false });
+						};
+					}}>
+						<input type="hidden" name="scale" value="F" />
+						<button type="submit" class="hover:text-gray-900 {scaleState.current === 'F' ? 'font-bold' : ''}" disabled={scaleState.current === 'F'}>F</button>
+					</form>
+				</div>
 				<form action="/logout" method="POST">
 					<button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900"
 						>Sign out</button
