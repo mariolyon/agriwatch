@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte'
 	import type { SavedLocation } from '$lib/types/location'
 	import { Scale, type Weather } from '$lib/types/weather'
 	import ForecastItem from './ForecastItem.svelte'
@@ -8,11 +7,10 @@
 		location: SavedLocation
 		weather?: Weather
 		scale?: Scale
-		actions?: Snippet
 		sharedScroll?: { left: number }
 	}
 
-	let { location, weather, scale = Scale.C, actions, sharedScroll = { left: 0 } }: Props = $props()
+	let { location, weather, scale = Scale.C, sharedScroll = { left: 0 } }: Props = $props()
 
 	let scrollContainer = $state<HTMLDivElement | null>(null)
 	
@@ -43,11 +41,6 @@
 	<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 	{#if weather}
 		<div class="flex min-w-0 w-full flex-col gap-2">
-			{#if actions}
-				<div class="flex justify-end">
-					{@render actions()}
-				</div>
-			{/if}
 			<div 
 				class="flex flex-row gap-2 overflow-x-auto pb-2"
 				bind:this={scrollContainer}
