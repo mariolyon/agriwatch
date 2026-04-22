@@ -10,8 +10,7 @@
 	let { data, children } = $props()
 	let { session } = $derived(data)
 
-	let initialScale = data.scale as Scale
-	let scaleState = $state({ current: initialScale })
+	let scaleState = $state({ current: data.scale as Scale })
 	setContext('scaleState', scaleState)
 
 	$effect(() => {
@@ -39,32 +38,33 @@
 		{#if session}
 			<div class="flex items-center gap-4">
 				<div class="flex items-center text-sm font-medium text-gray-600">
-					<form action="/scale" method="POST" class="inline" use:enhance={({ formData }) => {
-						const previousScale = scaleState.current;
-						scaleState.current = formData.get('scale') as Scale;
-						return async ({ result, update }) => {
-							if (result.type === 'error' || result.type === 'failure') {
-								scaleState.current = previousScale;
+					<form
+						action="/scale"
+						method="POST"
+						class="inline"
+						use:enhance={({ formData }) => {
+							const previousScale = scaleState.current
+							scaleState.current = formData.get('scale') as Scale
+							return async ({ result, update }) => {
+								if (result.type === 'error' || result.type === 'failure') {
+									scaleState.current = previousScale
+								}
+								await update({ invalidateAll: false })
 							}
-							await update({ invalidateAll: false });
-						};
-					}}>
-						<input type="hidden" name="scale" value="C" />
-						<button type="submit" class="hover:text-gray-900 {scaleState.current === 'C' ? 'font-bold' : ''}" disabled={scaleState.current === 'C'}>C</button>
-					</form>
-					<span class="mx-1">|</span>
-					<form action="/scale" method="POST" class="inline" use:enhance={({ formData }) => {
-						const previousScale = scaleState.current;
-						scaleState.current = formData.get('scale') as Scale;
-						return async ({ result, update }) => {
-							if (result.type === 'error' || result.type === 'failure') {
-								scaleState.current = previousScale;
-							}
-							await update({ invalidateAll: false });
-						};
-					}}>
-						<input type="hidden" name="scale" value="F" />
-						<button type="submit" class="hover:text-gray-900 {scaleState.current === 'F' ? 'font-bold' : ''}" disabled={scaleState.current === 'F'}>F</button>
+						}}
+					>
+						<input type="hidden" name="scale" value={scaleState.current} />
+						<button
+							type="submit"
+							class="hover:text-gray-900 {scaleState.current === 'C' ? 'font-bold' : ''}"
+							disabled={scaleState.current === 'C'}>C</button
+						>
+						<span class="mx-1">|</span>
+						<button
+							type="submit"
+							class="hover:text-gray-900 {scaleState.current === 'F' ? 'font-bold' : ''}"
+							disabled={scaleState.current === 'F'}>F</button
+						>
 					</form>
 				</div>
 				<form action="/logout" method="POST">
