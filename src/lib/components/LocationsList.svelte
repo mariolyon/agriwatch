@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Location from './Location.svelte'
-	import XIcon from './icons/XIcon.svelte'
+	import MoreHorizontalIcon from './icons/MoreHorizontalIcon.svelte'
 	import type { SavedLocation } from '$lib/types/location'
-	import type { Weather } from '$lib/types/weather'
+	import type { Weather, Scale } from '$lib/types/weather'
 
 	interface Props {
 		locations: SavedLocation[]
 		weatherData: Record<number, Weather>
-		scale: string
+		scale: Scale
 		onremove: (id: number) => void
 		onreorder: (fromIndex: number, toIndex: number) => void
 	}
@@ -17,11 +17,12 @@
 	let draggedIndex = $state<number | null>(null)
 	let dragOverIndex = $state<number | null>(null)
 	let startedOnDraggable = false
+	let openMenuId = $state<number | null>(null)
 
 	function handlePointerDown(e: PointerEvent) {
 		const target = e.target as HTMLElement
 		startedOnDraggable =
-			!target.closest('.location__info') && !target.closest('.locations-list__remove-btn')
+			!target.closest('.location__info') && !target.closest('.locations-list__actions')
 	}
 
 	function handleDragStart(e: DragEvent, index: number) {
@@ -70,6 +71,8 @@
 	}
 </script>
 
+<svelte:window onclick={() => (openMenuId = null)} />
+
 {#if locations.length === 0}
 	<p class="locations-list__empty mt-4 text-center">No Locations Saved</p>
 {:else}
@@ -93,16 +96,36 @@
 			>
 				<Location {location} weather={weatherData[location.id]} {scale} />
 
-				<button
-					class="locations-list__remove-btn absolute top-2 right-2 rounded-full p-1 transition-colors"
-					onclick={() => {
-						if (confirm(`Remove ${location.name}?`)) onremove(location.id)
-					}}
-					aria-label="Remove {location.name}"
-					title="Remove {location.name}"
-				>
-					<XIcon />
-				</button>
+				<div class="locations-list__actions absolute top-2 right-2">
+					<button
+						class="locations-list__menu-btn rounded-full p-1 text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+						onclick={(e) => {
+							e.stopPropagation()
+							openMenuId = openMenuId === location.id ? null : location.id
+						}}
+						aria-label="Menu for {location.name}"
+						title="Menu for {location.name}"
+					>
+						<MoreHorizontalIcon />
+					</button>
+
+					{#if openMenuId === location.id}
+						<div
+							class="absolute right-0 top-full z-10 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+						>
+							<button
+								class="w-full rounded-md px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 focus:outline-none"
+								onclick={(e) => {
+									e.stopPropagation()
+									onremove(location.id)
+									openMenuId = null
+								}}
+							>
+								Delete
+							</button>
+						</div>
+					{/if}
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -125,10 +148,6 @@
 
 	.locations-list__item--drag-over {
 		@apply border-blue-500 ring-2 ring-blue-200;
-	}
-
-	.locations-list__remove-btn {
-		@apply text-gray-400 hover:text-red-600 focus:ring-2 focus:ring-red-300 focus:outline-none;
 	}
 
 	.locations-list__empty {
