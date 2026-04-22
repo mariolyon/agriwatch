@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Location from './Location.svelte'
-	import MoreHorizontalIcon from './icons/MoreHorizontalIcon.svelte'
+	import LocationListItem from './LocationListItem.svelte'
 	import type { SavedLocation } from '$lib/types/location'
 	import type { Weather, Scale } from '$lib/types/weather'
 
@@ -69,6 +68,11 @@
 		draggedIndex = null
 		dragOverIndex = null
 	}
+
+	function handleToggleMenu(e: MouseEvent, id: number) {
+		e.stopPropagation()
+		openMenuId = openMenuId === id ? null : id
+	}
 </script>
 
 <svelte:window onclick={() => (openMenuId = null)} />
@@ -78,11 +82,13 @@
 {:else}
 	<div class="locations-list mt-4 flex min-w-fit flex-col gap-3" role="list">
 		{#each locations as location, i (location.id)}
-			<div
-				class="locations-list__item relative
-					{draggedIndex === i ? 'locations-list__item--dragging' : ''}
-					{dragOverIndex === i ? 'locations-list__item--drag-over' : ''}"
-				draggable="true"
+			<LocationListItem
+				{location}
+				weather={weatherData[location.id]}
+				{scale}
+				isDragging={draggedIndex === i}
+				isDragOver={dragOverIndex === i}
+				isMenuOpen={openMenuId === location.id}
 				onpointerdown={handlePointerDown}
 				ondragstart={(e) => handleDragStart(e, i)}
 				ondragover={(e) => handleDragOver(e, i)}
@@ -92,63 +98,15 @@
 				}}
 				ondrop={(e) => handleDrop(e, i)}
 				ondragend={handleDragEnd}
-				role="listitem"
-			>
-				<Location {location} weather={weatherData[location.id]} {scale} />
-
-				<div class="locations-list__actions absolute top-2 right-2">
-					<button
-						class="locations-list__menu-btn rounded-full p-1 text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
-						onclick={(e) => {
-							e.stopPropagation()
-							openMenuId = openMenuId === location.id ? null : location.id
-						}}
-						aria-label="Menu for {location.name}"
-						title="Menu for {location.name}"
-					>
-						<MoreHorizontalIcon />
-					</button>
-
-					{#if openMenuId === location.id}
-						<div
-							class="absolute right-0 top-full z-10 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-						>
-							<button
-								class="w-full rounded-md px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 focus:outline-none"
-								onclick={(e) => {
-									e.stopPropagation()
-									onremove(location.id)
-									openMenuId = null
-								}}
-							>
-								Delete
-							</button>
-						</div>
-					{/if}
-				</div>
-			</div>
+				ontogglemenu={(e) => handleToggleMenu(e, location.id)}
+				{onremove}
+			/>
 		{/each}
 	</div>
 {/if}
 
 <style lang="postcss">
 	@reference "tailwindcss";
-
-	.locations-list__item {
-		@apply cursor-grab;
-	}
-
-	.locations-list__item:active {
-		@apply cursor-grabbing;
-	}
-
-	.locations-list__item--dragging {
-		@apply opacity-50;
-	}
-
-	.locations-list__item--drag-over {
-		@apply border-blue-500 ring-2 ring-blue-200;
-	}
 
 	.locations-list__empty {
 		@apply text-gray-500;
