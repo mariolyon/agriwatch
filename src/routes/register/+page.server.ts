@@ -15,10 +15,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 	return {}
 }
 
+import { appendFileSync } from 'fs'
+
 export const actions: Actions = {
 	default: async ({ request, url, locals: { supabase } }) => {
 		const formData = await request.formData()
 		const email = formData.get('email') as string
+		appendFileSync('server-debug.log', `Registration attempt for: ${email}\n`)
 		const password = formData.get('password') as string
 		const passwordConfirm = formData.get('passwordConfirm') as string
 
