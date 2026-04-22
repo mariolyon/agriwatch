@@ -35,7 +35,7 @@
 		ondrop,
 		ondragend,
 		ontogglemenu,
-		onremove
+		onremove,
 	}: Props = $props()
 </script>
 
@@ -54,9 +54,12 @@
 >
 	<Location {location} {weather} {scale}>
 		{#snippet actions()}
-			<div class="locations-list__actions relative">
+			<div class="locations-list__actions relative p-0 leading-[0]">
 				<button
-					class="locations-list__menu-btn rounded-full p-1 text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+					class="locations-list__menu-btn
+					rounded-full text-gray-400 transition-colors
+					hover:text-gray-600 focus:ring-2
+					focus:ring-gray-300 focus:outline-none"
 					onclick={ontogglemenu}
 					aria-label="Menu for {location.name}"
 					title="Menu for {location.name}"
@@ -66,7 +69,7 @@
 
 				{#if isMenuOpen}
 					<div
-						class="absolute right-0 top-full z-10 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+						class="ring-opacity-5 absolute top-full right-0 z-10 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black"
 					>
 						<button
 							class="w-full rounded-md px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 focus:outline-none"
