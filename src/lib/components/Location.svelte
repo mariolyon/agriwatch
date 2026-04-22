@@ -19,7 +19,9 @@
 <div class="location">
 	<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 	{#if weather}
-		<table class="location__info w-full table-fixed border border-gray-200 p-1 text-sm font-medium sm:p-2">
+		<table
+			class="location__info w-full table-fixed border border-gray-200 p-1 text-sm font-medium sm:p-2"
+		>
 			<thead>
 				<tr class="divide-x border-gray-200">
 					<th class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">Now</th>
@@ -38,7 +40,9 @@
 					</td>
 					{#each weather.next as forecast, i ('day' + i)}
 						<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
-							<Temperature value={forecast.min[scale]} /> - <Temperature value={forecast.max[scale]} />
+							<Temperature value={forecast.min[scale]} /> - <Temperature
+								value={forecast.max[scale]}
+							/>
 							<span class="hidden md:inline">{scale}</span>
 						</td>
 					{/each}
@@ -58,10 +62,10 @@
 	}
 
 	.location__city-name {
-		@apply self-start text-green-700;
+		@apply self-start text-slate-600;
 	}
 
 	.location__info {
-		@apply text-blue-600;
+		@apply text-slate-600;
 	}
 </style>
