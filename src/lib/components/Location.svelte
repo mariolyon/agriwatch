@@ -2,59 +2,66 @@
 	import type { Snippet } from 'svelte'
 	import type { SavedLocation } from '$lib/types/location'
 	import { Scale, type Weather } from '$lib/types/weather'
-	import Temperature from './Temperature.svelte'
+	import ForecastItem from './ForecastItem.svelte'
 
 	interface Props {
 		location: SavedLocation
 		weather?: Weather
 		scale?: Scale
 		actions?: Snippet
+		sharedScroll?: { left: number }
 	}
 
-	let { location, weather, scale = Scale.C, actions }: Props = $props()
+	let { location, weather, scale = Scale.C, actions, sharedScroll = { left: 0 } }: Props = $props()
+
+	let scrollContainer = $state<HTMLDivElement | null>(null)
+	
+	function handleScroll(e: Event) {
+		if (scrollContainer) {
+			sharedScroll.left = scrollContainer.scrollLeft
+		}
+	}
+
+	$effect(() => {
+		if (scrollContainer && Math.abs(scrollContainer.scrollLeft - sharedScroll.left) > 1) {
+			scrollContainer.scrollLeft = sharedScroll.left
+		}
+	})
 
 	let locationLabel = $derived.by(() => {
 		return [location.name, location.admin1, location.country].filter(Boolean).join(', ')
 	})
+
+	function formatDate(offsetDays: number = 0): string {
+		const date = new Date()
+		date.setDate(date.getDate() + offsetDays)
+		return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+	}
 </script>
 
 <div class="location">
 	<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 	{#if weather}
-		<div class="flex w-full flex-col gap-2">
+		<div class="flex min-w-0 w-full flex-col gap-2">
 			{#if actions}
 				<div class="flex justify-end">
 					{@render actions()}
 				</div>
 			{/if}
-			<table
-				class="location__info w-full table-fixed border border-gray-200 p-1 text-sm font-medium sm:p-2"
+			<div 
+				class="flex flex-row gap-2 overflow-x-auto pb-2"
+				bind:this={scrollContainer}
+				onscroll={handleScroll}
 			>
-				<thead>
-					<tr class="divide-x border-gray-200">
-						<th class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">Now</th>
-						{#each weather.next as forecast, i ('head_' + i)}
-							<th class="border-gray-200 px-1 text-left sm:px-4 sm:py-0">
-								+{i + 1} <span class="md:hidden">d</span><span class="hidden md:inline">day</span>
-							</th>
-						{/each}
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="divide-x border-gray-200">
-						<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
-							<Temperature value={weather.temp[scale]} />
-						</td>
-						{#each weather.next as forecast, i ('day' + i)}
-							<td class="border-gray-200 px-1 text-left align-top sm:px-4 sm:py-0">
-								<Temperature value={forecast.min[scale]} /> - <Temperature
-									value={forecast.max[scale]}
-								/>
-							</td>
-						{/each}
-					</tr>
-				</tbody>
-			</table>
+				<ForecastItem date={formatDate(0)} temp={weather.temp[scale]} />
+				{#each weather.next as forecast, i ('day_' + i)}
+					<ForecastItem 
+						date={formatDate(i + 1)} 
+						minTemp={forecast.min[scale]} 
+						maxTemp={forecast.max[scale]} 
+					/>
+				{/each}
+			</div>
 		</div>
 	{/if}
 </div>
@@ -64,7 +71,7 @@
 
 	.location {
 		@apply border border-gray-200 bg-white transition-colors;
-		@apply min-w-160;
+		@apply w-full;
 		@apply grid grid-cols-1 items-start gap-4 rounded-xl p-4 shadow-sm sm:grid-cols-[12rem_1fr];
 	}
 

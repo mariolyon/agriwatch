@@ -17,6 +17,7 @@
 	let dragOverIndex = $state<number | null>(null)
 	let startedOnDraggable = false
 	let openMenuId = $state<number | null>(null)
+	let sharedScroll = $state({ left: 0 })
 
 	function handlePointerDown(e: PointerEvent) {
 		const target = e.target as HTMLElement
@@ -80,7 +81,7 @@
 {#if locations.length === 0}
 	<p class="locations-list__empty mt-4 text-center">No Locations Saved</p>
 {:else}
-	<div class="locations-list mt-4 flex min-w-fit flex-col gap-3" role="list">
+	<div class="locations-list mt-4 flex flex-col gap-3" role="list">
 		{#each locations as location, i (location.id)}
 			<LocationListItem
 				{location}
@@ -89,6 +90,7 @@
 				isDragging={draggedIndex === i}
 				isDragOver={dragOverIndex === i}
 				isMenuOpen={openMenuId === location.id}
+				{sharedScroll}
 				onpointerdown={handlePointerDown}
 				ondragstart={(e) => handleDragStart(e, i)}
 				ondragover={(e) => handleDragOver(e, i)}

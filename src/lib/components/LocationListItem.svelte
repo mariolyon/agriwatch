@@ -11,6 +11,7 @@
 		isDragging: boolean
 		isDragOver: boolean
 		isMenuOpen: boolean
+		sharedScroll: { left: number }
 		onpointerdown: (e: PointerEvent) => void
 		ondragstart: (e: DragEvent) => void
 		ondragover: (e: DragEvent) => void
@@ -28,6 +29,7 @@
 		isDragging,
 		isDragOver,
 		isMenuOpen,
+		sharedScroll,
 		onpointerdown,
 		ondragstart,
 		ondragover,
@@ -52,7 +54,7 @@
 	{ondragend}
 	role="listitem"
 >
-	<Location {location} {weather} {scale}>
+	<Location {location} {weather} {scale} {sharedScroll}>
 		{#snippet actions()}
 			<div class="locations-list__actions relative p-0 leading-[0]">
 				<button
