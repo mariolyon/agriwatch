@@ -2,17 +2,15 @@
 	import '$lib/styles/app.css'
 	import favicon from '$lib/assets/favicon.svg'
 	import { enhance } from '$app/forms'
-	import { setContext } from 'svelte'
 	import { Scale } from '$lib/types/weather'
+	import scaleState from '$lib/state/scaleState.svelte'
 
 	import { page } from '$app/state'
 
 	let { data, children } = $props()
 	let { session } = $derived(data)
 
-	let scaleState = $state({ current: data.scale })
-	setContext('scaleState', scaleState)
-
+	scaleState.current = data.scale as Scale
 	const titles: Record<string, string> = {
 		'/': 'Dashboard',
 		'/browser': 'Location Search',

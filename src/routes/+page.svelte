@@ -2,12 +2,9 @@
 	import { LocationsList } from '$lib/components'
 	import type { PageData } from './$types'
 	import type { SavedLocation } from '$lib/types/location'
-	import { Scale } from '$lib/types/weather'
-	import { getContext } from 'svelte'
+	import scaleState from '$lib/state/scaleState.svelte'
 
 	let { data }: { data: PageData } = $props()
-
-	let scaleState = getContext<{ current: Scale }>('scaleState')
 
 	let locations: SavedLocation[] = $state.raw(data.locations)
 
