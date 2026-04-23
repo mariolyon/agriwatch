@@ -13,7 +13,7 @@
 	let { location, weather, scale = Scale.C, sharedScroll = { left: 0 } }: Props = $props()
 
 	let scrollContainer = $state<HTMLDivElement | null>(null)
-	
+
 	function handleScroll(e: Event) {
 		if (scrollContainer) {
 			sharedScroll.left = scrollContainer.scrollLeft
@@ -40,18 +40,18 @@
 <div class="location">
 	<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 	{#if weather}
-		<div class="flex min-w-0 w-full flex-col gap-2">
-			<div 
+		<div class="flex w-full min-w-0 flex-col gap-2">
+			<div
 				class="flex flex-row gap-2 overflow-x-auto pb-2"
 				bind:this={scrollContainer}
 				onscroll={handleScroll}
 			>
 				<ForecastItem date={formatDate(0)} temp={weather.temp[scale]} />
 				{#each weather.next as forecast, i ('day_' + i)}
-					<ForecastItem 
-						date={formatDate(i + 1)} 
-						minTemp={forecast.min[scale]} 
-						maxTemp={forecast.max[scale]} 
+					<ForecastItem
+						date={formatDate(i + 1)}
+						minTemp={forecast.min[scale]}
+						maxTemp={forecast.max[scale]}
 					/>
 				{/each}
 			</div>
