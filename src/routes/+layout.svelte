@@ -23,7 +23,7 @@
 <div class="app-layout flex min-h-screen flex-col bg-gray-50">
 	<header class="app-layout__banner flex items-center justify-between gap-2 px-6 py-4">
 		<div class="flex items-center gap-2">
-			<a href="/" class="app-layout__logo text-xl font-bold">AgriWatch</a>
+			<a href="/" class="app-layout__logo text-xl font-bold">ClimView</a>
 			{#if pageTitle}
 				<span class="text-xl text-gray-400">/</span>
 				<span class="text-xl font-semibold text-gray-700">{pageTitle}</span>

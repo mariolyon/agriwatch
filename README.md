@@ -1,4 +1,4 @@
-# Agriwatch
+# ClimView
 
 Proof of Concept for an application that allows the user to check the weather of several locations at once.
 
@@ -11,7 +11,7 @@ Forecasts are shown on the Dashboard in either F or C, according to the user's p
 
 ## How to Access deployed application
 
-go to: https://agriwatch.digileo.com
+go to: https://climview.digileo.com
 
 ## How to Run Locally:
 

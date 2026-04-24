@@ -2,4 +2,4 @@
 echo "#BUILD"
 set -euo pipefail
 
-docker build -t ghcr.io/mariolyon/agriwatch:latest .
+docker build -t ghcr.io/mariolyon/climview:latest .

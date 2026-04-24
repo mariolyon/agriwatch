@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agriwatch
+  name: climview
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: agriwatch
+      app: climview
   template:
     metadata:
       labels:
-        app: agriwatch
+        app: climview
     spec:
       containers:
-        - name: agriwatch
-          image: ghcr.io/mariolyon/agriwatch:latest
+        - name: climview
+          image: ghcr.io/mariolyon/climview:latest
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -26,22 +26,22 @@ spec:
             - name: PUBLIC_SUPABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: agriwatch-env
+                  name: climview-env
                   key: PUBLIC_SUPABASE_URL
             - name: PUBLIC_SUPABASE_ANON_KEY
               valueFrom:
                 secretKeyRef:
-                  name: agriwatch-env
+                  name: climview-env
                   key: PUBLIC_SUPABASE_ANON_KEY
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: agriwatch-env
+                  name: climview-env
                   key: DATABASE_URL
             - name: WEATHER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: agriwatch-env
+                  name: climview-env
                   key: WEATHER_API_KEY
           resources:
             requests:
@@ -57,13 +57,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: agriwatch
+  name: climview
   labels:
-    app: agriwatch
+    app: climview
 spec:
   type: ClusterIP
   selector:
-    app: agriwatch
+    app: climview
   ports:
     - port: 80
       targetPort: 3000
@@ -72,23 +72,23 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: agriwatch-ingress
+  name: climview-ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: traefik
   rules:
-    - host: agriwatch.digileo.com
+    - host: climview.digileo.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: agriwatch
+                name: climview
                 port:
                   number: 80
   tls:
     - hosts:
-        - agriwatch.digileo.com
+        - climview.digileo.com
       secretName: digileo-cert

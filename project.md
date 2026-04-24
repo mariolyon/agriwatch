@@ -1,4 +1,4 @@
-AgriWatch
+ClimView
 #########
 
 is a digital platform used by cooperative farms across West Europe to monitor weather conditions and plan agricultural activities.
