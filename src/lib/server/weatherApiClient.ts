@@ -1,6 +1,8 @@
 import type { Weather } from '$lib/types/weather'
 import { Scale } from '$lib/types/weather'
 import { searchLocations } from '$lib/utils/geocoding'
+import { db } from './db'
+import { locations as locationsTable } from '../../../drizzle/schema'
 
 export async function getWeather(locationName: string, forecast: boolean = true): Promise<Weather> {
 	try {
@@ -9,7 +11,23 @@ export async function getWeather(locationName: string, forecast: boolean = true)
 			throw new Error(`No coordinates found for location: ${locationName}`)
 		}
 
-		const { latitude, longitude } = locations[0]
+		const location = locations[0]
+
+		try {
+			await db.insert(locationsTable).values({
+				id: location.id,
+				name: location.name,
+				latitude: location.latitude,
+				longitude: location.longitude,
+				country: location.country || '',
+				admin1: location.admin1 || '',
+				timezone: location.timezone || 'auto',
+			}).onConflictDoNothing()
+		} catch (dbError) {
+			console.error('Error saving location coordinates to DB:', dbError)
+		}
+
+		const { latitude, longitude } = location
 
 		const url = new URL('https://api.open-meteo.com/v1/forecast')
 		url.searchParams.set('latitude', latitude.toString())
