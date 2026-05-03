@@ -47,10 +47,10 @@
 				bind:this={scrollContainer}
 				onscroll={handleScroll}
 			>
-				<ForecastItem date={formatDate(0)} temp={weather.temp[scale]} {displayMode} />
+				<ForecastItem date="Now" temp={weather.temp[scale]} {displayMode} />
 				{#each weather.next as forecast, i ('day_' + i)}
 					<ForecastItem
-						date={formatDate(i + 1)}
+						date={i === 0 ? `Today (${formatDate(i)})` : formatDate(i)}
 						minTemp={forecast.min[scale]}
 						maxTemp={forecast.max[scale]}
 						precipitation={forecast.precipitation}

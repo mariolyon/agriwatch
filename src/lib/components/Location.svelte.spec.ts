@@ -43,11 +43,11 @@ describe('Location component', () => {
 			scale: Scale.C,
 		})
 
-		const tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
-		const expectedDate = tomorrow.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+		const today = new Date()
+		const expectedDate = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 
-		await expect.element(getByText(expectedDate)).toBeVisible()
+		await expect.element(getByText('Now')).toBeVisible()
+		await expect.element(getByText(`Today (${expectedDate})`)).toBeVisible()
 
 		await expect.element(getByText('20°')).toBeVisible()
 		await expect.element(getByText('15° - 25°')).toBeVisible()
