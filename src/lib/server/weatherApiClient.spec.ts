@@ -84,7 +84,7 @@ describe('weatherApiClient', () => {
 							time: ['2023-01-01'],
 							temperature_2m_max: [25.1],
 							temperature_2m_min: [15.4],
-								precipitation_sum: [5.2],
+							precipitation_sum: [5.2],
 						},
 					}),
 				} as Response
@@ -154,5 +154,52 @@ describe('weatherApiClient', () => {
 			temp: { C: 0, F: 0 },
 			next: [],
 		})
+	})
+
+	it('fetches weather for a specific date', async () => {
+		vi.mocked(searchLocationsServer).mockResolvedValue([
+			{
+				id: 1,
+				name: 'London',
+				latitude: 51.5,
+				longitude: -0.1,
+				country: 'UK',
+				country_code: 'UK',
+				timezone: 'Europe/London',
+				feature_code: '',
+				country_id: 1,
+			},
+		])
+
+		const specificDate = new Date('2026-05-20T14:30:00Z')
+
+		global.fetch = vi.fn().mockImplementation(async (url: string | URL | Request) => {
+			if (url.toString().includes('api.open-meteo.com')) {
+				return {
+					ok: true,
+					json: async () => ({
+						hourly: {
+							time: ['2026-05-20T14:00', '2026-05-20T15:00'],
+							temperature_2m: [22.0, 23.0],
+						},
+						daily: {
+							time: ['2026-05-20'],
+							temperature_2m_max: [25.0],
+							temperature_2m_min: [15.0],
+							precipitation_sum: [0],
+						},
+					}),
+				} as Response
+			}
+			return { ok: false, status: 404 } as Response
+		})
+
+		const result = await getWeather('London', true, specificDate)
+
+		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
+		expect(fetchUrl.searchParams.get('start_date')).toBe('2026-05-20')
+		expect(fetchUrl.searchParams.get('hourly')).toBe('temperature_2m')
+
+		expect(result.temp.C).toBe(22)
 	})
 })

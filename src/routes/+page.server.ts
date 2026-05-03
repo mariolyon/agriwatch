@@ -6,11 +6,16 @@ import { fail } from '@sveltejs/kit'
 import type { SavedLocation } from '$lib/types/location'
 import { getWeather } from '$lib/server/weatherApiClient'
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	const user = locals.user
 	if (!user) {
-		return { locations: [], weatherData: {} }
+		return { locations: [], weatherData: {}, selectedTime: new Date().toISOString() }
 	}
+
+	const dtParam = url.searchParams.get('dt')
+	const selectedTime = dtParam ? new Date(dtParam) : new Date()
+	// Ensure valid date
+	const finalSelectedTime = isNaN(selectedTime.getTime()) ? new Date() : selectedTime
 
 	const record = await db.query.users.findFirst({
 		where: eq(users.userId, user.id),
@@ -20,7 +25,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const scale = record?.scale || 'C'
 
 	const weatherPromises = locations.map(async (loc) => {
-		const weather = await getWeather(loc.name)
+		const weather = await getWeather(loc.name, true, finalSelectedTime)
 		return { id: loc.id, weather }
 	})
 
@@ -37,6 +42,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		locations,
 		weatherData,
 		scale,
+		selectedTime: finalSelectedTime.toISOString(),
 	}
 }
 

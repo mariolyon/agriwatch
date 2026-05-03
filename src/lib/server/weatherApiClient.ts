@@ -2,7 +2,11 @@ import type { Weather } from '$lib/types/weather'
 import { Scale } from '$lib/types/weather'
 import { searchLocationsServer } from './geocoding'
 
-export async function getWeather(locationName: string, forecast: boolean = true): Promise<Weather> {
+export async function getWeather(
+	locationName: string,
+	forecast: boolean = true,
+	date?: Date
+): Promise<Weather> {
 	try {
 		const locations = await searchLocationsServer(locationName)
 		if (locations.length === 0) {
@@ -16,7 +20,19 @@ export async function getWeather(locationName: string, forecast: boolean = true)
 		const url = new URL('https://api.open-meteo.com/v1/forecast')
 		url.searchParams.set('latitude', latitude.toString())
 		url.searchParams.set('longitude', longitude.toString())
-		url.searchParams.set('current', 'temperature_2m')
+
+		if (date) {
+			const dateStr = date.toISOString().split('T')[0]
+			url.searchParams.set('start_date', dateStr)
+			// Fetch 7 days from the selected date for the forecast
+			const endDate = new Date(date)
+			endDate.setDate(endDate.getDate() + 7)
+			url.searchParams.set('end_date', endDate.toISOString().split('T')[0])
+			url.searchParams.set('hourly', 'temperature_2m')
+		} else {
+			url.searchParams.set('current', 'temperature_2m')
+		}
+
 		if (forecast) {
 			url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,precipitation_sum')
 		}
@@ -28,8 +44,27 @@ export async function getWeather(locationName: string, forecast: boolean = true)
 		}
 		const data = await response.json()
 
-		const currentC = data.current.temperature_2m
-		const currentF = (currentC * 9/5) + 32
+		let currentC = 0
+		if (date && data.hourly) {
+			// Find the hourly temperature closest to the requested time
+			const requestedTime = date.getTime()
+			let closestIndex = 0
+			let minDiff = Infinity
+
+			for (let i = 0; i < data.hourly.time.length; i++) {
+				const time = new Date(data.hourly.time[i] + 'Z').getTime()
+				const diff = Math.abs(time - requestedTime)
+				if (diff < minDiff) {
+					minDiff = diff
+					closestIndex = i
+				}
+			}
+			currentC = data.hourly.temperature_2m[closestIndex]
+		} else if (data.current) {
+			currentC = data.current.temperature_2m
+		}
+
+		const currentF = (currentC * 9 / 5) + 32
 
 		const next = []
 		if (forecast && data.daily) {

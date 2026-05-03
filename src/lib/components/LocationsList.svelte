@@ -8,11 +8,22 @@
 		weatherData: Record<number, Weather>
 		scale: Scale
 		displayOptions: DisplayOptions
+		selectedTime?: string
+		onTimeChange?: (time: string) => void
 		onremove: (id: number) => void
 		onreorder: (fromIndex: number, toIndex: number) => void
 	}
 
-	let { locations, weatherData, scale, displayOptions, onremove, onreorder }: Props = $props()
+	let {
+		locations,
+		weatherData,
+		scale,
+		displayOptions,
+		selectedTime,
+		onTimeChange,
+		onremove,
+		onreorder,
+	}: Props = $props()
 
 	let draggedIndex = $state<number | null>(null)
 	let dragOverIndex = $state<number | null>(null)
@@ -22,8 +33,7 @@
 
 	function handlePointerDown(e: PointerEvent) {
 		const target = e.target as HTMLElement
-		startedOnDraggable =
-			!target.closest('.location__info') && !target.closest('.locations-list__actions')
+		startedOnDraggable = !target.closest('.location__info') && !target.closest('.locations-list__actions')
 	}
 
 	function handleDragStart(e: DragEvent, index: number) {
@@ -89,6 +99,8 @@
 				weather={weatherData[location.id]}
 				{scale}
 				{displayOptions}
+				{selectedTime}
+				{onTimeChange}
 				isDragging={draggedIndex === i}
 				isDragOver={dragOverIndex === i}
 				isMenuOpen={openMenuId === location.id}
@@ -102,7 +114,7 @@
 				}}
 				ondrop={(e) => handleDrop(e, i)}
 				ondragend={handleDragEnd}
-				ontogglemenu={(e) => handleTogglemenu(e, location.id)}
+				ontogglemenu={(e) => handleToggleMenu(e, location.id)}
 				{onremove}
 			/>
 		{/each}

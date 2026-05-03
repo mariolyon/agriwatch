@@ -4,6 +4,7 @@
 	import type { SavedLocation } from '$lib/types/location'
 	import type { DisplayOptions } from '$lib/types/weather'
 	import scaleState from '$lib/state/scaleState.svelte'
+	import { goto } from '$app/navigation'
 
 	let { data }: { data: PageData } = $props()
 
@@ -39,23 +40,25 @@
 	function toggleOption(option: keyof DisplayOptions) {
 		displayOptions[option] = !displayOptions[option]
 	}
+
+	async function handleTimeChange(newTime: string) {
+		const url = new URL(window.location.href)
+		url.searchParams.set('dt', newTime)
+		await goto(url.toString(), { replaceState: true, keepFocus: true, noScroll: true })
+	}
 </script>
 
 <main class="dashboard flex flex-1 flex-col p-3 sm:p-4">
 	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="dashboard__toggles flex gap-2">
 			<button
-				class="dashboard__toggle-btn {displayOptions.temperature
-					? 'dashboard__toggle-btn--active'
-					: ''}"
+				class="dashboard__toggle-btn {displayOptions.temperature ? 'dashboard__toggle-btn--active' : ''}"
 				onclick={() => toggleOption('temperature')}
 			>
 				Temperature
 			</button>
 			<button
-				class="dashboard__toggle-btn {displayOptions.precipitation
-					? 'dashboard__toggle-btn--active'
-					: ''}"
+				class="dashboard__toggle-btn {displayOptions.precipitation ? 'dashboard__toggle-btn--active' : ''}"
 				onclick={() => toggleOption('precipitation')}
 			>
 				Precipitation
@@ -69,6 +72,8 @@
 		weatherData={data.weatherData}
 		scale={scaleState.current}
 		displayOptions={displayOptions}
+		selectedTime={data.selectedTime}
+		onTimeChange={handleTimeChange}
 		onremove={removeLocation}
 		onreorder={reorderLocations}
 	/>

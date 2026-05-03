@@ -9,6 +9,8 @@
 		weather?: Weather
 		scale: Scale
 		displayOptions: DisplayOptions
+		selectedTime?: string
+		onTimeChange?: (time: string) => void
 		isDragging: boolean
 		isDragOver: boolean
 		isMenuOpen: boolean
@@ -28,6 +30,8 @@
 		weather,
 		scale,
 		displayOptions,
+		selectedTime,
+		onTimeChange,
 		isDragging,
 		isDragOver,
 		isMenuOpen,
@@ -56,7 +60,15 @@
 	{ondragend}
 	role="listitem"
 >
-	<Location {location} {weather} {scale} {displayOptions} {sharedScroll} />
+	<Location
+		{location}
+		{weather}
+		{scale}
+		{displayOptions}
+		{selectedTime}
+		{onTimeChange}
+		{sharedScroll}
+	/>
 
 	<div class="locations-list__actions absolute top-5 right-4 p-0 leading-[0]">
 		<button

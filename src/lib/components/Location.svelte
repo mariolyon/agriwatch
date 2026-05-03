@@ -10,6 +10,8 @@
 		scale?: Scale
 		displayOptions?: DisplayOptions
 		sharedScroll?: { left: number }
+		selectedTime?: string
+		onTimeChange?: (time: string) => void
 	}
 
 	let {
@@ -18,14 +20,21 @@
 		scale = Scale.C,
 		displayOptions = { temperature: true, precipitation: false },
 		sharedScroll = { left: 0 },
+		selectedTime,
+		onTimeChange,
 	}: Props = $props()
 
 	let scrollContainer = $state<HTMLDivElement | null>(null)
-	let now = $state(new Date())
+	let internalNow = $state(new Date())
+
+	// Use selectedTime if provided, otherwise use internalNow for live updates
+	let effectiveTime = $derived(selectedTime ? new Date(selectedTime) : internalNow)
 
 	$effect(() => {
+		if (selectedTime) return // Don't tick if we have a selected time
+
 		const interval = setInterval(() => {
-			now = new Date()
+			internalNow = new Date()
 		}, 10000)
 		return () => clearInterval(interval)
 	})
@@ -43,12 +52,12 @@
 	})
 
 	let currentDateTime = $derived.by(() => {
-		const date = now.toLocaleDateString('en-GB', {
+		const date = effectiveTime.toLocaleDateString('en-GB', {
 			day: 'numeric',
 			month: 'short',
 			timeZone: location.timezone,
 		})
-		const time = now.toLocaleTimeString('en-GB', {
+		const time = effectiveTime.toLocaleTimeString('en-GB', {
 			hour: '2-digit',
 			minute: '2-digit',
 			timeZone: location.timezone,
@@ -56,15 +65,27 @@
 		return `${date}, ${time}`
 	})
 
-	let locationLabel = $derived.by(() => {
-		return [location.name, location.admin1, location.country].filter(Boolean).join(', ')
-	})
+	function handleDateTimeInput(e: Event) {
+		const target = e.target as HTMLInputElement
+		if (target.value && onTimeChange) {
+			// input type="datetime-local" gives local time, we should convert it back to ISO string
+			const localDate = new Date(target.value)
+			onTimeChange(localDate.toISOString())
+		}
+	}
 
 	function formatDate(offsetDays: number = 0): string {
-		const date = new Date()
+		const date = new Date(effectiveTime)
 		date.setDate(date.getDate() + offsetDays)
 		return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 	}
+
+	// Format effectiveTime for input value (YYYY-MM-DDTHH:mm)
+	let inputTimeValue = $derived.by(() => {
+		const d = effectiveTime
+		const pad = (n: number) => n.toString().padStart(2, '0')
+		return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+	})
 </script>
 
 <div class="location">
@@ -75,7 +96,23 @@
 		{#if weather}
 			<div class="location__current-temp flex items-baseline gap-2 text-2xl font-semibold text-gray-800">
 				<Temperature value={weather.temp[scale]} />
-				<span class="text-sm font-normal text-gray-500">{currentDateTime}</span>
+				<div class="relative">
+					<button
+						class="location__time-display text-sm font-normal text-gray-500 hover:text-blue-600 focus:outline-none"
+						onclick={(e) => {
+							const input = e.currentTarget.nextElementSibling as HTMLInputElement
+							input?.showPicker()
+						}}
+					>
+						{currentDateTime}
+					</button>
+					<input
+						type="datetime-local"
+						class="invisible absolute top-0 left-0 h-0 w-0"
+						value={inputTimeValue}
+						onchange={handleDateTimeInput}
+					/>
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -115,5 +152,9 @@
 
 	.location__current-temp {
 		@apply sm:mt-1;
+	}
+
+	.location__time-display {
+		@apply border-b border-dotted border-gray-400 cursor-pointer;
 	}
 </style>

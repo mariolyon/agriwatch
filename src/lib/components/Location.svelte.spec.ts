@@ -125,4 +125,33 @@ describe('Location component', () => {
 		await expect.element(getByText('15° - 25°')).toBeVisible()
 		await expect.element(getByText('5.5 mm')).toBeVisible()
 	})
+
+	it('renders specific time when selectedTime is provided', async () => {
+		const location = {
+			id: 1,
+			name: 'London',
+			country: 'UK',
+			latitude: 0,
+			longitude: 0,
+			timezone: 'GMT',
+		}
+
+		const weather = {
+			temp: { C: 20, F: 68 },
+			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 } }],
+		}
+
+		const selectedTime = '2026-05-20T14:30:00Z'
+
+		const { getByText } = render(Location, {
+			location,
+			weather,
+			selectedTime,
+		})
+
+		// 20 May 2026, 14:30 (GMT)
+		await expect.element(getByText('20 May, 14:30')).toBeVisible()
+		// Forecast date for day 0
+		await expect.element(getByText('20 May', { exact: true })).toBeVisible()
+	})
 })
