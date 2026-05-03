@@ -91,4 +91,4 @@ spec:
   tls:
     - hosts:
         - climview.digileo.com
-      secretName: digileo-cert
+      secretName: climview-cert

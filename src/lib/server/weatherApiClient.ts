@@ -1,15 +1,24 @@
 import type { Weather } from '$lib/types/weather'
-import * as dotenv from 'dotenv'
 import { Scale } from '$lib/types/weather'
-dotenv.config()
-
-const API_KEY = process.env.WEATHER_API_KEY!
+import { searchLocations } from '$lib/utils/geocoding'
 
 export async function getWeather(locationName: string, forecast: boolean = true): Promise<Weather> {
 	try {
-		const url = forecast
-			? `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&days=7&q=${locationName}`
-			: `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${locationName}`
+		const locations = await searchLocations(locationName)
+		if (locations.length === 0) {
+			throw new Error(`No coordinates found for location: ${locationName}`)
+		}
+
+		const { latitude, longitude } = locations[0]
+
+		const url = new URL('https://api.open-meteo.com/v1/forecast')
+		url.searchParams.set('latitude', latitude.toString())
+		url.searchParams.set('longitude', longitude.toString())
+		url.searchParams.set('current', 'temperature_2m')
+		if (forecast) {
+			url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min')
+		}
+		url.searchParams.set('timezone', 'auto')
 
 		const response = await fetch(url)
 		if (!response.ok) {
@@ -17,17 +26,27 @@ export async function getWeather(locationName: string, forecast: boolean = true)
 		}
 		const data = await response.json()
 
+		const currentC = data.current.temperature_2m
+		const currentF = (currentC * 9/5) + 32
+
+		const next = []
+		if (forecast && data.daily) {
+			for (let i = 0; i < data.daily.time.length; i++) {
+				const maxC = data.daily.temperature_2m_max[i]
+				const minC = data.daily.temperature_2m_min[i]
+				next.push({
+					max: { C: Math.round(maxC), F: Math.round((maxC * 9/5) + 32) },
+					min: { C: Math.round(minC), F: Math.round((minC * 9/5) + 32) },
+				})
+			}
+		}
+
 		const result = {
 			temp: {
-				F: Math.round(data.current.temp_f),
-				C: Math.round(data.current.temp_c),
+				F: Math.round(currentF),
+				C: Math.round(currentC),
 			},
-			next:
-				(!data.forecast && []) ||
-				data.forecast.forecastday.map((info: any) => ({
-					max: { C: Math.round(info.day.maxtemp_c), F: Math.round(info.day.maxtemp_f) },
-					min: { C: Math.round(info.day.mintemp_c), F: Math.round(info.day.mintemp_f) },
-				})),
+			next,
 		}
 		return result
 	} catch (error) {
