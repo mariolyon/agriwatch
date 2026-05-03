@@ -1,17 +1,18 @@
 <script lang="ts">
 	import LocationListItem from './LocationListItem.svelte'
 	import type { SavedLocation } from '$lib/types/location'
-	import type { Weather, Scale } from '$lib/types/weather'
+	import type { Weather, Scale, DisplayMode } from '$lib/types/weather'
 
 	interface Props {
 		locations: SavedLocation[]
 		weatherData: Record<number, Weather>
 		scale: Scale
+		displayMode: DisplayMode
 		onremove: (id: number) => void
 		onreorder: (fromIndex: number, toIndex: number) => void
 	}
 
-	let { locations, weatherData, scale, onremove, onreorder }: Props = $props()
+	let { locations, weatherData, scale, displayMode, onremove, onreorder }: Props = $props()
 
 	let draggedIndex = $state<number | null>(null)
 	let dragOverIndex = $state<number | null>(null)
@@ -87,6 +88,7 @@
 				{location}
 				weather={weatherData[location.id]}
 				{scale}
+				{displayMode}
 				isDragging={draggedIndex === i}
 				isDragOver={dragOverIndex === i}
 				isMenuOpen={openMenuId === location.id}

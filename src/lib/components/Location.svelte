@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { SavedLocation } from '$lib/types/location'
-	import { Scale, type Weather } from '$lib/types/weather'
+	import { Scale, type Weather, type DisplayMode } from '$lib/types/weather'
 	import ForecastItem from './ForecastItem.svelte'
 
 	interface Props {
 		location: SavedLocation
 		weather?: Weather
 		scale?: Scale
+		displayMode?: DisplayMode
 		sharedScroll?: { left: number }
 	}
 
-	let { location, weather, scale = Scale.C, sharedScroll = { left: 0 } }: Props = $props()
+	let { location, weather, scale = Scale.C, displayMode = 'temperature', sharedScroll = { left: 0 } }: Props = $props()
 
 	let scrollContainer = $state<HTMLDivElement | null>(null)
 
@@ -46,12 +47,14 @@
 				bind:this={scrollContainer}
 				onscroll={handleScroll}
 			>
-				<ForecastItem date={formatDate(0)} temp={weather.temp[scale]} />
+				<ForecastItem date={formatDate(0)} temp={weather.temp[scale]} {displayMode} />
 				{#each weather.next as forecast, i ('day_' + i)}
 					<ForecastItem
 						date={formatDate(i + 1)}
 						minTemp={forecast.min[scale]}
 						maxTemp={forecast.max[scale]}
+						precipitation={forecast.precipitation}
+						{displayMode}
 					/>
 				{/each}
 			</div>

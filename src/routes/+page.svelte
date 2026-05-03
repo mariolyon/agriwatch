@@ -2,11 +2,13 @@
 	import { LocationsList } from '$lib/components'
 	import type { PageData } from './$types'
 	import type { SavedLocation } from '$lib/types/location'
+	import type { DisplayMode } from '$lib/types/weather'
 	import scaleState from '$lib/state/scaleState.svelte'
 
 	let { data }: { data: PageData } = $props()
 
 	let locations: SavedLocation[] = $state.raw(data.locations)
+	let displayMode = $state<DisplayMode>('temperature')
 
 	async function saveLocations() {
 		const formData = new FormData()
@@ -33,7 +35,21 @@
 </script>
 
 <main class="dashboard flex flex-1 flex-col p-3 sm:p-4">
-	<header class="flex items-center justify-end">
+	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+		<div class="dashboard__toggles flex gap-2">
+			<button
+				class="dashboard__toggle-btn {displayMode === 'temperature' ? 'dashboard__toggle-btn--active' : ''}"
+				onclick={() => displayMode = 'temperature'}
+			>
+				Temperature
+			</button>
+			<button
+				class="dashboard__toggle-btn {displayMode === 'precipitation' ? 'dashboard__toggle-btn--active' : ''}"
+				onclick={() => displayMode = 'precipitation'}
+			>
+				Precipitation
+			</button>
+		</div>
 		<a class="dashboard__add-btn" href="/browser">Add Location</a>
 	</header>
 
@@ -41,6 +57,7 @@
 		{locations}
 		weatherData={data.weatherData}
 		scale={scaleState.current}
+		{displayMode}
 		onremove={removeLocation}
 		onreorder={reorderLocations}
 	/>
@@ -48,6 +65,26 @@
 
 <style lang="postcss">
 	@reference "tailwindcss";
+
+	.dashboard__toggles {
+		@apply flex rounded-lg bg-gray-100 p-1;
+	}
+
+	.dashboard__toggle-btn {
+		@apply rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors;
+	}
+
+	.dashboard__toggle-btn:hover {
+		@apply bg-gray-200 text-gray-900;
+	}
+
+	.dashboard__toggle-btn--active {
+		@apply bg-white text-gray-900 shadow-sm;
+	}
+
+	.dashboard__toggle-btn--active:hover {
+		@apply bg-white text-gray-900;
+	}
 
 	.dashboard__add-btn {
 		@apply rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors;

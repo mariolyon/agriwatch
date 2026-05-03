@@ -84,6 +84,7 @@ describe('weatherApiClient', () => {
 							time: ['2023-01-01'],
 							temperature_2m_max: [25.1],
 							temperature_2m_min: [15.4],
+								precipitation_sum: [5.2],
 						},
 					}),
 				} as Response
@@ -97,11 +98,11 @@ describe('weatherApiClient', () => {
 		expect(global.fetch).toHaveBeenCalledTimes(1)
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
-		expect(fetchUrl.searchParams.get('daily')).toBe('temperature_2m_max,temperature_2m_min')
+		expect(fetchUrl.searchParams.get('daily')).toBe('temperature_2m_max,temperature_2m_min,precipitation_sum')
 
 		expect(result).toEqual({
 			temp: { C: 21, F: 69 },
-			next: [{ max: { C: 25, F: 77 }, min: { C: 15, F: 60 } }],
+			next: [{ max: { C: 25, F: 77 }, min: { C: 15, F: 60 }, precipitation: 5.2 }],
 		})
 	})
 
