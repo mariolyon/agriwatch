@@ -21,6 +21,14 @@
 	}: Props = $props()
 
 	let scrollContainer = $state<HTMLDivElement | null>(null)
+	let now = $state(new Date())
+
+	$effect(() => {
+		const interval = setInterval(() => {
+			now = new Date()
+		}, 10000)
+		return () => clearInterval(interval)
+	})
 
 	function handleScroll(e: Event) {
 		if (scrollContainer) {
@@ -32,6 +40,20 @@
 		if (scrollContainer && Math.abs(scrollContainer.scrollLeft - sharedScroll.left) > 1) {
 			scrollContainer.scrollLeft = sharedScroll.left
 		}
+	})
+
+	let currentDateTime = $derived.by(() => {
+		const date = now.toLocaleDateString('en-GB', {
+			day: 'numeric',
+			month: 'short',
+			timeZone: location.timezone,
+		})
+		const time = now.toLocaleTimeString('en-GB', {
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZone: location.timezone,
+		})
+		return `${date}, ${time}`
 	})
 
 	let locationLabel = $derived.by(() => {
@@ -51,8 +73,9 @@
 	>
 		<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 		{#if weather}
-			<div class="location__current-temp text-2xl font-semibold text-gray-800">
+			<div class="location__current-temp flex items-baseline gap-2 text-2xl font-semibold text-gray-800">
 				<Temperature value={weather.temp[scale]} />
+				<span class="text-sm font-normal text-gray-500">{currentDateTime}</span>
 			</div>
 		{/if}
 	</div>
@@ -92,9 +115,5 @@
 
 	.location__current-temp {
 		@apply sm:mt-1;
-	}
-
-	.location__info {
-		@apply text-slate-600;
 	}
 </style>

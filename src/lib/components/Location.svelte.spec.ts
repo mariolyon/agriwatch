@@ -44,9 +44,19 @@ describe('Location component', () => {
 		})
 
 		const today = new Date()
-		const expectedDate = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+		const expectedDate = today.toLocaleDateString('en-GB', {
+			day: 'numeric',
+			month: 'short',
+			timeZone: 'GMT',
+		})
+		const expectedTime = today.toLocaleTimeString('en-GB', {
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZone: 'GMT',
+		})
 
-		await expect.element(getByText(`${expectedDate}`)).toBeVisible()
+		await expect.element(getByText(`${expectedDate}, ${expectedTime}`)).toBeVisible()
+		await expect.element(getByText(`${expectedDate}`, { exact: true })).toBeVisible()
 
 		await expect.element(getByText('20°')).toBeVisible()
 		await expect.element(getByText('15° - 25°')).toBeVisible()
