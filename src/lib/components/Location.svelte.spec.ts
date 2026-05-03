@@ -46,7 +46,6 @@ describe('Location component', () => {
 		const today = new Date()
 		const expectedDate = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 
-		await expect.element(getByText('Now')).toBeVisible()
 		await expect.element(getByText(`Today (${expectedDate})`)).toBeVisible()
 
 		await expect.element(getByText('20°')).toBeVisible()
@@ -91,6 +90,6 @@ describe('Location component', () => {
 			},
 		})
 
-		await expect.element(getByText('Now')).not.toBeInTheDocument()
+		await expect.element(getByText('London')).toBeVisible()
 	})
 })

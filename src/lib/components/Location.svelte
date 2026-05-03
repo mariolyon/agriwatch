@@ -2,6 +2,7 @@
 	import type { SavedLocation } from '$lib/types/location'
 	import { Scale, type Weather, type DisplayMode } from '$lib/types/weather'
 	import ForecastItem from './ForecastItem.svelte'
+	import Temperature from './Temperature.svelte'
 
 	interface Props {
 		location: SavedLocation
@@ -39,7 +40,14 @@
 </script>
 
 <div class="location">
-	<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
+	<div class="location__header flex items-center justify-between sm:flex-col sm:items-start sm:justify-start sm:gap-1">
+		<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
+		{#if weather}
+			<div class="location__current-temp text-2xl font-semibold text-gray-800">
+				<Temperature value={weather.temp[scale]} />
+			</div>
+		{/if}
+	</div>
 	{#if weather}
 		<div class="flex w-full min-w-0 flex-col gap-2">
 			<div
@@ -47,7 +55,6 @@
 				bind:this={scrollContainer}
 				onscroll={handleScroll}
 			>
-				<ForecastItem date="Now" temp={weather.temp[scale]} {displayMode} />
 				{#each weather.next as forecast, i ('day_' + i)}
 					<ForecastItem
 						date={i === 0 ? `Today (${formatDate(i)})` : formatDate(i)}
@@ -68,11 +75,15 @@
 	.location {
 		@apply border border-gray-200 bg-white transition-colors;
 		@apply w-full;
-		@apply grid grid-cols-1 items-start gap-4 rounded-xl p-4 shadow-sm sm:grid-cols-[12rem_1fr];
+		@apply grid grid-cols-1 items-center gap-4 rounded-xl p-4 shadow-sm sm:grid-cols-[12rem_1fr] sm:items-start;
 	}
 
 	.location__city-name {
-		@apply self-start text-slate-600;
+		@apply text-slate-600;
+	}
+
+	.location__current-temp {
+		@apply sm:mt-1;
 	}
 
 	.location__info {
