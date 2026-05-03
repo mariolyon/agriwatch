@@ -43,9 +43,14 @@ describe('Location component', () => {
 			scale: Scale.C,
 		})
 
-		await expect.element(getByText('20 C')).toBeVisible()
-		await expect.element(getByText('+1 day')).toBeVisible()
-		await expect.element(getByText('15 - 25 C')).toBeVisible()
+		const tomorrow = new Date()
+		tomorrow.setDate(tomorrow.getDate() + 1)
+		const expectedDate = tomorrow.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+
+		await expect.element(getByText(expectedDate)).toBeVisible()
+
+		await expect.element(getByText('20°')).toBeVisible()
+		await expect.element(getByText('15° - 25°')).toBeVisible()
 	})
 
 	it('renders weather information in Fahrenheit when scale is F', async () => {
@@ -65,8 +70,8 @@ describe('Location component', () => {
 			scale: Scale.F,
 		})
 
-		await expect.element(getByText('68 F')).toBeVisible()
-		await expect.element(getByText('59 - 77 F')).toBeVisible()
+		await expect.element(getByText('68°')).toBeVisible()
+		await expect.element(getByText('59° - 77°')).toBeVisible()
 	})
 
 	it('does not render weather table if weather is not provided', async () => {

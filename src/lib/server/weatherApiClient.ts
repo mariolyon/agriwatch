@@ -1,31 +1,15 @@
 import type { Weather } from '$lib/types/weather'
 import { Scale } from '$lib/types/weather'
-import { searchLocations } from '$lib/utils/geocoding'
-import { db } from './db'
-import { locations as locationsTable } from '../../../drizzle/schema'
+import { searchLocationsServer } from './geocoding'
 
 export async function getWeather(locationName: string, forecast: boolean = true): Promise<Weather> {
 	try {
-		const locations = await searchLocations(locationName)
+		const locations = await searchLocationsServer(locationName)
 		if (locations.length === 0) {
 			throw new Error(`No coordinates found for location: ${locationName}`)
 		}
 
 		const location = locations[0]
-
-		try {
-			await db.insert(locationsTable).values({
-				id: location.id,
-				name: location.name,
-				latitude: location.latitude,
-				longitude: location.longitude,
-				country: location.country || '',
-				admin1: location.admin1 || '',
-				timezone: location.timezone || 'auto',
-			}).onConflictDoNothing()
-		} catch (dbError) {
-			console.error('Error saving location coordinates to DB:', dbError)
-		}
 
 		const { latitude, longitude } = location
 

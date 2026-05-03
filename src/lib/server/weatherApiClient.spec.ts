@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getWeather } from './weatherApiClient'
-import { searchLocations } from '$lib/utils/geocoding'
+import { searchLocationsServer } from './geocoding'
 
-vi.mock('$lib/utils/geocoding', () => ({
-	searchLocations: vi.fn(),
+vi.mock('./geocoding', () => ({
+	searchLocationsServer: vi.fn(),
 }))
 
 describe('weatherApiClient', () => {
@@ -13,7 +13,7 @@ describe('weatherApiClient', () => {
 	})
 
 	it('fetches current weather successfully', async () => {
-		vi.mocked(searchLocations).mockResolvedValue([
+		vi.mocked(searchLocationsServer).mockResolvedValue([
 			{
 				id: 1,
 				name: 'London',
@@ -43,7 +43,7 @@ describe('weatherApiClient', () => {
 
 		const result = await getWeather('London', false)
 
-		expect(searchLocations).toHaveBeenCalledWith('London')
+		expect(searchLocationsServer).toHaveBeenCalledWith('London')
 		expect(global.fetch).toHaveBeenCalledTimes(1)
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
@@ -58,7 +58,7 @@ describe('weatherApiClient', () => {
 	})
 
 	it('fetches weather forecast successfully', async () => {
-		vi.mocked(searchLocations).mockResolvedValue([
+		vi.mocked(searchLocationsServer).mockResolvedValue([
 			{
 				id: 1,
 				name: 'London',
@@ -93,7 +93,7 @@ describe('weatherApiClient', () => {
 
 		const result = await getWeather('London', true)
 
-		expect(searchLocations).toHaveBeenCalledWith('London')
+		expect(searchLocationsServer).toHaveBeenCalledWith('London')
 		expect(global.fetch).toHaveBeenCalledTimes(1)
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
@@ -106,13 +106,13 @@ describe('weatherApiClient', () => {
 	})
 
 	it('returns default values if location not found', async () => {
-		vi.mocked(searchLocations).mockResolvedValue([])
+		vi.mocked(searchLocationsServer).mockResolvedValue([])
 
 		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
 		const result = await getWeather('Unknown')
 
-		expect(searchLocations).toHaveBeenCalledWith('Unknown')
+		expect(searchLocationsServer).toHaveBeenCalledWith('Unknown')
 		expect(global.fetch).not.toHaveBeenCalled()
 		expect(consoleSpy).toHaveBeenCalled()
 
@@ -123,7 +123,7 @@ describe('weatherApiClient', () => {
 	})
 
 	it('returns default values on fetch error', async () => {
-		vi.mocked(searchLocations).mockResolvedValue([
+		vi.mocked(searchLocationsServer).mockResolvedValue([
 			{
 				id: 1,
 				name: 'London',
