@@ -46,7 +46,7 @@ describe('Location component', () => {
 		const today = new Date()
 		const expectedDate = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 
-		await expect.element(getByText(`Today (${expectedDate})`)).toBeVisible()
+		await expect.element(getByText(`${expectedDate}`)).toBeVisible()
 
 		await expect.element(getByText('20°')).toBeVisible()
 		await expect.element(getByText('15° - 25°')).toBeVisible()
@@ -91,5 +91,28 @@ describe('Location component', () => {
 		})
 
 		await expect.element(getByText('London')).toBeVisible()
+	})
+
+	it('renders both temperature and precipitation when both options are enabled', async () => {
+		const location = {
+			id: 1,
+			name: 'London',
+		}
+
+		const weather = {
+			temp: { C: 20, F: 68 },
+			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 }, precipitation: 5.5 }],
+		}
+
+		const { getByText } = render(Location, {
+			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
+			weather,
+			scale: Scale.C,
+			displayOptions: { temperature: true, precipitation: true },
+		})
+
+		await expect.element(getByText('20°')).toBeVisible()
+		await expect.element(getByText('15° - 25°')).toBeVisible()
+		await expect.element(getByText('5.5 mm')).toBeVisible()
 	})
 })

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { SavedLocation } from '$lib/types/location'
-	import { Scale, type Weather, type DisplayMode } from '$lib/types/weather'
+	import { Scale, type Weather, type DisplayOptions } from '$lib/types/weather'
 	import ForecastItem from './ForecastItem.svelte'
 	import Temperature from './Temperature.svelte'
 
@@ -8,11 +8,17 @@
 		location: SavedLocation
 		weather?: Weather
 		scale?: Scale
-		displayMode?: DisplayMode
+		displayOptions?: DisplayOptions
 		sharedScroll?: { left: number }
 	}
 
-	let { location, weather, scale = Scale.C, displayMode = 'temperature', sharedScroll = { left: 0 } }: Props = $props()
+	let {
+		location,
+		weather,
+		scale = Scale.C,
+		displayOptions = { temperature: true, precipitation: false },
+		sharedScroll = { left: 0 },
+	}: Props = $props()
 
 	let scrollContainer = $state<HTMLDivElement | null>(null)
 
@@ -40,7 +46,9 @@
 </script>
 
 <div class="location">
-	<div class="location__header flex items-center justify-between sm:flex-col sm:items-start sm:justify-start sm:gap-1">
+	<div
+		class="location__header flex items-center justify-between sm:flex-col sm:items-start sm:justify-start sm:gap-1"
+	>
 		<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 		{#if weather}
 			<div class="location__current-temp text-2xl font-semibold text-gray-800">
@@ -57,11 +65,11 @@
 			>
 				{#each weather.next as forecast, i ('day_' + i)}
 					<ForecastItem
-						date={i === 0 ? `Today (${formatDate(i)})` : formatDate(i)}
+						date={formatDate(i)}
 						minTemp={forecast.min[scale]}
 						maxTemp={forecast.max[scale]}
 						precipitation={forecast.precipitation}
-						{displayMode}
+						{displayOptions}
 					/>
 				{/each}
 			</div>

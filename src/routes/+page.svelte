@@ -2,13 +2,16 @@
 	import { LocationsList } from '$lib/components'
 	import type { PageData } from './$types'
 	import type { SavedLocation } from '$lib/types/location'
-	import type { DisplayMode } from '$lib/types/weather'
+	import type { DisplayOptions } from '$lib/types/weather'
 	import scaleState from '$lib/state/scaleState.svelte'
 
 	let { data }: { data: PageData } = $props()
 
 	let locations: SavedLocation[] = $state.raw(data.locations)
-	let displayMode = $state<DisplayMode>('temperature')
+	let displayOptions = $state<DisplayOptions>({
+		temperature: true,
+		precipitation: false,
+	})
 
 	async function saveLocations() {
 		const formData = new FormData()
@@ -32,20 +35,28 @@
 		locations = newLocations
 		saveLocations()
 	}
+
+	function toggleOption(option: keyof DisplayOptions) {
+		displayOptions[option] = !displayOptions[option]
+	}
 </script>
 
 <main class="dashboard flex flex-1 flex-col p-3 sm:p-4">
 	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="dashboard__toggles flex gap-2">
 			<button
-				class="dashboard__toggle-btn {displayMode === 'temperature' ? 'dashboard__toggle-btn--active' : ''}"
-				onclick={() => displayMode = 'temperature'}
+				class="dashboard__toggle-btn {displayOptions.temperature
+					? 'dashboard__toggle-btn--active'
+					: ''}"
+				onclick={() => toggleOption('temperature')}
 			>
 				Temperature
 			</button>
 			<button
-				class="dashboard__toggle-btn {displayMode === 'precipitation' ? 'dashboard__toggle-btn--active' : ''}"
-				onclick={() => displayMode = 'precipitation'}
+				class="dashboard__toggle-btn {displayOptions.precipitation
+					? 'dashboard__toggle-btn--active'
+					: ''}"
+				onclick={() => toggleOption('precipitation')}
 			>
 				Precipitation
 			</button>
@@ -57,7 +68,7 @@
 		{locations}
 		weatherData={data.weatherData}
 		scale={scaleState.current}
-		{displayMode}
+		displayOptions={displayOptions}
 		onremove={removeLocation}
 		onreorder={reorderLocations}
 	/>

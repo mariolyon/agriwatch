@@ -19,4 +19,7 @@ export enum Scale {
 	F = 'F',
 }
 
-export type DisplayMode = 'temperature' | 'precipitation'
+export interface DisplayOptions {
+	temperature: boolean
+	precipitation: boolean
+}

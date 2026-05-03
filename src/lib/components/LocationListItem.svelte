@@ -2,13 +2,13 @@
 	import Location from './Location.svelte'
 	import MoreHorizontalIcon from './icons/MoreHorizontalIcon.svelte'
 	import type { SavedLocation } from '$lib/types/location'
-	import type { Weather, Scale, DisplayMode } from '$lib/types/weather'
+	import type { Weather, Scale, DisplayOptions } from '$lib/types/weather'
 
 	interface Props {
 		location: SavedLocation
 		weather?: Weather
 		scale: Scale
-		displayMode: DisplayMode
+		displayOptions: DisplayOptions
 		isDragging: boolean
 		isDragOver: boolean
 		isMenuOpen: boolean
@@ -27,7 +27,7 @@
 		location,
 		weather,
 		scale,
-		displayMode,
+		displayOptions,
 		isDragging,
 		isDragOver,
 		isMenuOpen,
@@ -56,7 +56,7 @@
 	{ondragend}
 	role="listitem"
 >
-	<Location {location} {weather} {scale} {displayMode} {sharedScroll} />
+	<Location {location} {weather} {scale} {displayOptions} {sharedScroll} />
 
 	<div class="locations-list__actions absolute top-5 right-4 p-0 leading-[0]">
 		<button
