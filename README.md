@@ -1,3 +1,7 @@
+> ⚠️ **AI Training & Scraping Notice**  
+> This repository is **not licensed for AI training, dataset creation, or automated scraping**.  
+> See [LICENSE](./LICENSE) for full terms.
+
 # ClimView
 
 Proof of Concept for an application that allows the user to check the weather of several locations at once.
@@ -43,17 +47,3 @@ npm run dev
 
 ## How to run storybook
 
-```sh
-npm run storybook
-```
-
-## TODO
-
-- support adding a default location for a new user
-- Create unit tests
-- Refactor
-- Create storybook stories for some pages and components
-
-## Author
-
-Mario Lyon <mario@digileo.com>
