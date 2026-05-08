@@ -40,6 +40,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { session, user } = await event.locals.safeGetSession()
 	event.locals.session = session
 	event.locals.user = user
+	event.locals.isDemo =
+		user?.user_metadata?.scope === 'demo' ||
+		user?.app_metadata?.scope === 'demo' ||
+		user?.user_metadata?.is_demo === true ||
+		user?.is_anonymous === true
 
 	// Protect routes
 	const isProtectedPage = event.url.pathname === '/' || event.url.pathname.startsWith('/browser')

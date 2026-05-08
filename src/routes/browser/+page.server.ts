@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db'
-import { userLocations } from '../../../drizzle/schema'
+import { users } from '../../../drizzle/schema'
 import type { Actions } from './$types'
 import { fail, redirect } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
@@ -16,24 +16,19 @@ export const actions: Actions = {
 
 		const location = JSON.parse(locationStr) as SavedLocation
 
-		const record = await db.query.userLocations.findFirst({
-			where: eq(userLocations.userId, user.id),
+		const record = await db.query.users.findFirst({
+			where: eq(users.userId, user.id),
 		})
 
 		if (record) {
 			const currentLocations = (record.data as SavedLocation[]) || []
 			if (!currentLocations.some((loc) => loc.id === location.id)) {
-				currentLocations.push(location)
+				const updatedLocations = [...currentLocations, location]
 				await db
-					.update(userLocations)
-					.set({ data: currentLocations })
-					.where(eq(userLocations.userId, user.id))
+					.update(users)
+					.set({ data: updatedLocations })
+					.where(eq(users.userId, user.id))
 			}
-		} else {
-			await db.insert(userLocations).values({
-				userId: user.id,
-				data: [location],
-			})
 		}
 
 		throw redirect(303, '/')

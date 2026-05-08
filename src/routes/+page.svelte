@@ -5,16 +5,89 @@
 	import type { DisplayOptions } from '$lib/types/weather'
 	import scaleState from '$lib/state/scaleState.svelte'
 	import { goto } from '$app/navigation'
+	import { onMount } from 'svelte'
 
 	let { data }: { data: PageData } = $props()
 
-	let locations: SavedLocation[] = $state.raw(data.locations)
+	let locations = $state<SavedLocation[]>(data.locations)
+	let weatherData = $state(data.weatherData)
 	let displayOptions = $state<DisplayOptions>({
 		temperature: true,
 		precipitation: false,
 	})
 
+	async function fetchWeatherForLocations(locs: SavedLocation[]) {
+		console.log('Fetching weather for:', locs.length, 'locations')
+		if (locs.length === 0) return
+
+		const newWeatherData: Record<number, any> = { ...weatherData }
+		for (const loc of locs) {
+			try {
+				const res = await fetch(
+					`/api/weather?location=${encodeURIComponent(loc.name)}&dt=${data.selectedTime}`
+				)
+				if (res.ok) {
+					newWeatherData[loc.id] = await res.json()
+				}
+			} catch (e) {
+				console.error(`Failed to fetch weather for ${loc.name}`, e)
+			}
+		}
+		weatherData = newWeatherData
+	}
+
+	onMount(async () => {
+		console.log('onMount triggered, isDemo:', data.isDemo)
+		if (data.isDemo) {
+			const stored = localStorage.getItem('climview_demo_locations')
+			console.log('Stored locations:', stored)
+			if (stored) {
+				locations = JSON.parse(stored)
+				await fetchWeatherForLocations(locations)
+			} else {
+				console.log('First time demo user, detecting location...')
+				// First time demo user - try to add current location
+				const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+				const city = timezone.split('/').pop()?.replace(/_/g, ' ')
+				console.log('Detected city:', city, 'from timezone:', timezone)
+				if (city) {
+					try {
+						const searchRes = await fetch(`/api/search?q=${encodeURIComponent(city)}`)
+						if (searchRes.ok) {
+							const results = await searchRes.json()
+							console.log('Search results:', results)
+							if (results && results.length > 0) {
+								const loc = results[0]
+								const initialLocation: SavedLocation = {
+									id: loc.id,
+									name: loc.name,
+									latitude: loc.latitude,
+									longitude: loc.longitude,
+									country: loc.country,
+									admin1: loc.admin1,
+									timezone: loc.timezone,
+								}
+								locations = [initialLocation]
+								localStorage.setItem('climview_demo_locations', JSON.stringify(locations))
+								console.log('Initial location saved:', initialLocation)
+								await fetchWeatherForLocations(locations)
+							}
+						} else {
+							console.error('Search API failed:', searchRes.status)
+						}
+					} catch (e) {
+						console.error('Failed to set initial demo location', e)
+					}
+				}
+			}
+		}
+	})
+
 	async function saveLocations() {
+		if (data.isDemo) {
+			localStorage.setItem('climview_demo_locations', JSON.stringify(locations))
+			return
+		}
 		const formData = new FormData()
 		formData.append('locations', JSON.stringify(locations))
 
@@ -64,12 +137,21 @@
 				Precipitation
 			</button>
 		</div>
-		<a class="dashboard__add-btn" href="/browser">Add Location</a>
+		{#if data.isDemo}
+			<a
+				class="dashboard__add-btn"
+				href="/register?message=Adding%20locations%20requires%20a%20user%20account%20to%20be%20created.&redirectTo=/browser"
+			>
+				Add Location
+			</a>
+		{:else}
+			<a class="dashboard__add-btn" href="/browser">Add Location</a>
+		{/if}
 	</header>
 
 	<LocationsList
 		{locations}
-		weatherData={data.weatherData}
+		weatherData={weatherData}
 		scale={scaleState.current}
 		displayOptions={displayOptions}
 		selectedTime={data.selectedTime}
@@ -82,35 +164,37 @@
 <style lang="postcss">
 	@reference "tailwindcss";
 
-	.dashboard__toggles {
-		@apply flex rounded-lg bg-gray-100 p-1;
-	}
+	.dashboard {
+		&__toggles {
+			@apply flex rounded-lg bg-gray-100 p-1;
+		}
 
-	.dashboard__toggle-btn {
-		@apply rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors;
-	}
+		&__toggle-btn {
+			@apply rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors;
 
-	.dashboard__toggle-btn:hover {
-		@apply bg-gray-200 text-gray-900;
-	}
+			&:hover {
+				@apply bg-gray-200 text-gray-900;
+			}
 
-	.dashboard__toggle-btn--active {
-		@apply bg-white text-gray-900 shadow-sm;
-	}
+			&--active {
+				@apply bg-white text-gray-900 shadow-sm;
 
-	.dashboard__toggle-btn--active:hover {
-		@apply bg-white text-gray-900;
-	}
+				&:hover {
+					@apply bg-white text-gray-900;
+				}
+			}
+		}
 
-	.dashboard__add-btn {
-		@apply rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors;
-	}
+		&__add-btn {
+			@apply rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors;
 
-	.dashboard__add-btn:hover {
-		@apply bg-green-700;
-	}
+			&:hover {
+				@apply bg-green-700;
+			}
 
-	.dashboard__add-btn:focus-visible {
-		@apply ring-2 ring-green-300 outline-none;
+			&:focus-visible {
+				@apply ring-2 ring-green-300 outline-none;
+			}
+		}
 	}
 </style>

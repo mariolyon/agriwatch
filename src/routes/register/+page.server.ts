@@ -8,20 +8,17 @@ import type { SavedLocation } from '$lib/types/location'
 export const load: PageServerLoad = async ({ locals }) => {
 	const { session } = await locals.safeGetSession()
 
-	if (session) {
+	if (session && !locals.isDemo) {
 		throw redirect(303, '/')
 	}
 
 	return {}
 }
 
-import { appendFileSync } from 'fs'
-
 export const actions: Actions = {
 	default: async ({ request, url, locals: { supabase } }) => {
 		const formData = await request.formData()
 		const email = formData.get('email') as string
-		appendFileSync('server-debug.log', `Registration attempt for: ${email}\n`)
 		const password = formData.get('password') as string
 		const passwordConfirm = formData.get('passwordConfirm') as string
 
@@ -55,27 +52,41 @@ export const actions: Actions = {
 		}
 
 		if (data.user) {
-			const initialLocations: SavedLocation[] = []
-			const timezone = formData.get('timezone') as string
-			if (timezone) {
-				const city = timezone.split('/').pop()?.replace(/_/g, ' ')
-				if (city) {
-					try {
-						const results = await searchLocations(city)
-						if (results && results.length > 0) {
-							const loc = results[0]
-							initialLocations.push({
-								id: loc.id,
-								name: loc.name,
-								latitude: loc.latitude,
-								longitude: loc.longitude,
-								country: loc.country,
-								admin1: loc.admin1,
-								timezone: loc.timezone,
-							})
+			let initialLocations: SavedLocation[] = []
+
+			// Check for demo locations from localStorage (passed via hidden input)
+			const demoLocationsStr = formData.get('demoLocations') as string
+			if (demoLocationsStr) {
+				try {
+					initialLocations = JSON.parse(demoLocationsStr)
+				} catch (e) {
+					console.error('Failed to parse demo locations', e)
+				}
+			}
+
+			// If no demo locations, fall back to detecting location from timezone
+			if (initialLocations.length === 0) {
+				const timezone = formData.get('timezone') as string
+				if (timezone) {
+					const city = timezone.split('/').pop()?.replace(/_/g, ' ')
+					if (city) {
+						try {
+							const results = await searchLocations(city)
+							if (results && results.length > 0) {
+								const loc = results[0]
+								initialLocations.push({
+									id: loc.id,
+									name: loc.name,
+									latitude: loc.latitude,
+									longitude: loc.longitude,
+									country: loc.country,
+									admin1: loc.admin1,
+									timezone: loc.timezone,
+								})
+							}
+						} catch (e) {
+							console.error('Failed to fetch initial location', e)
 						}
-					} catch (e) {
-						console.error('Failed to fetch initial location', e)
 					}
 				}
 			}
@@ -85,6 +96,11 @@ export const actions: Actions = {
 				scale: 'C',
 				data: initialLocations,
 			})
+		}
+
+		const redirectTo = formData.get('redirectTo') as string
+		if (redirectTo) {
+			throw redirect(303, redirectTo)
 		}
 
 		throw redirect(303, '/')

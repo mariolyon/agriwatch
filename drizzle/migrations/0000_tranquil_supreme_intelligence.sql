@@ -7,3 +7,10 @@ CREATE TABLE "locations" (
 	"admin1" text,
 	"timezone" text NOT NULL
 );
+--> statement-breakpoint
+CREATE TABLE "users" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
+	"data" jsonb DEFAULT '[]' NOT NULL,
+	"scale" text DEFAULT 'C'
+);

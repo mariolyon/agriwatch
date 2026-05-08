@@ -2,12 +2,18 @@
 	import { enhance } from '$app/forms'
 	import type { ActionData } from './$types'
 	import { onMount } from 'svelte'
+	import { page } from '$app/state'
 
 	let { form } = $props<{ form: ActionData }>()
 	let timezone = $state('')
+	let demoLocations = $state('')
+
+	let message = $derived(page.url.searchParams.get('message'))
+	let redirectTo = $derived(page.url.searchParams.get('redirectTo'))
 
 	onMount(() => {
 		timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+		demoLocations = localStorage.getItem('climview_demo_locations') || ''
 	})
 </script>
 
@@ -19,8 +25,18 @@
 	</div>
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+		{#if message}
+			<div class="mb-6 rounded-md bg-blue-50 p-4 ring-1 ring-blue-200 ring-inset">
+				<div class="text-sm text-blue-700">{message}</div>
+			</div>
+		{/if}
+
 		<form class="space-y-6" method="POST" use:enhance>
 			<input type="hidden" name="timezone" value={timezone} />
+			<input type="hidden" name="demoLocations" value={demoLocations} />
+			{#if redirectTo}
+				<input type="hidden" name="redirectTo" value={redirectTo} />
+			{/if}
 			{#if form?.error}
 				<div class="rounded-md bg-red-50 p-4">
 					<div class="text-sm text-red-700">{form.error}</div>

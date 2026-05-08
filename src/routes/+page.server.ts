@@ -8,8 +8,24 @@ import { getWeather } from '$lib/server/weatherApiClient'
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	const user = locals.user
+	const isDemo = locals.isDemo
 	if (!user) {
-		return { locations: [], weatherData: {}, selectedTime: new Date().toISOString() }
+		return {
+			locations: [],
+			weatherData: {},
+			selectedTime: new Date().toISOString(),
+			isDemo: false,
+		}
+	}
+
+	if (isDemo) {
+		return {
+			locations: [],
+			weatherData: {},
+			scale: 'C',
+			selectedTime: new Date().toISOString(),
+			isDemo: true,
+		}
 	}
 
 	const dtParam = url.searchParams.get('dt')
@@ -43,6 +59,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		weatherData,
 		scale,
 		selectedTime: finalSelectedTime.toISOString(),
+		isDemo,
 	}
 }
 

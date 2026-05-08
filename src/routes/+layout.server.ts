@@ -3,7 +3,7 @@ import { db } from '$lib/server/db'
 import { users } from '../../drizzle/schema'
 import { eq } from 'drizzle-orm'
 
-export const load: LayoutServerLoad = async ({ locals: { safeGetSession }, cookies }) => {
+export const load: LayoutServerLoad = async ({ locals: { safeGetSession, isDemo }, cookies }) => {
 	const { session, user } = await safeGetSession()
 
 	let scale = 'C'
@@ -20,6 +20,7 @@ export const load: LayoutServerLoad = async ({ locals: { safeGetSession }, cooki
 		session,
 		user,
 		scale,
+		isDemo,
 		cookies: cookies.getAll(),
 	}
 }

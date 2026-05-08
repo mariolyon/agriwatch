@@ -65,6 +65,15 @@
 			</div>
 		</form>
 
+		<div class="mt-4">
+			<a
+				href="/demo"
+				class="flex w-full justify-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold leading-6 text-green-600 shadow-sm ring-1 ring-inset ring-green-600 hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+			>
+				Try Demo
+			</a>
+		</div>
+
 		<p class="mt-10 text-center text-sm text-gray-500">
 			Not a member?
 			<a href="/register" class="leading-6 font-semibold text-green-600 hover:text-green-500"

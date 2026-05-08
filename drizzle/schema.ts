@@ -7,8 +7,6 @@ export const users = pgTable('users', {
 	scale: text('scale').default('C'),
 })
 
-export const userLocations = users
-
 export const locations = pgTable('locations', {
 	id: integer('id').primaryKey(),
 	name: text('name').notNull(),
@@ -18,3 +16,4 @@ export const locations = pgTable('locations', {
 	admin1: text('admin1'),
 	timezone: text('timezone').notNull(),
 })
+
