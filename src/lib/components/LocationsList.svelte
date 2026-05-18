@@ -33,7 +33,8 @@
 
 	function handlePointerDown(e: PointerEvent) {
 		const target = e.target as HTMLElement
-		startedOnDraggable = !target.closest('.location__info') && !target.closest('.locations-list__actions')
+		startedOnDraggable =
+			!target.closest('.location__info') && !target.closest('.locations-list__actions')
 	}
 
 	function handleDragStart(e: DragEvent, index: number) {

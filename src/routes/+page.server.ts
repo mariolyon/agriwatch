@@ -33,9 +33,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	// Ensure valid date
 	const finalSelectedTime = isNaN(selectedTime.getTime()) ? new Date() : selectedTime
 
-	const record = await db.query.users.findFirst({
-		where: eq(users.userId, user.id),
-	})
+	const record = user && (await getUser(user.id))
 
 	const locations = (record?.data as SavedLocation[]) || []
 	const scale = record?.scale || 'C'
@@ -63,6 +61,16 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	}
 }
 
+async function getUser(id: string) {
+	try {
+		return await db.query.users.findFirst({
+			where: eq(users.userId, id),
+		})
+	} catch (error) {
+		console.error('Database query error in getUser:', error)
+	}
+}
+
 export const actions: Actions = {
 	save: async ({ request, locals }) => {
 		const user = locals.user
@@ -74,7 +82,12 @@ export const actions: Actions = {
 
 		const locations = JSON.parse(locationsStr)
 
-		await db.update(users).set({ data: locations }).where(eq(users.userId, user.id))
+		try {
+			await db.update(users).set({ data: locations }).where(eq(users.userId, user.id))
+		} catch (error) {
+			console.error('Database query error in save action:', error)
+			return fail(500, { message: 'Failed to save locations' })
+		}
 
 		return { success: true }
 	},
@@ -88,14 +101,17 @@ export const actions: Actions = {
 
 		const locationId = parseInt(locationIdStr, 10)
 
-		const record = await db.query.users.findFirst({
-			where: eq(users.userId, user.id),
-		})
+		const record = user?.id && (await getUser(user.id))
 
 		if (record) {
 			const currentLocations = (record.data as SavedLocation[]) || []
 			const newLocations = currentLocations.filter((loc) => loc.id !== locationId)
-			await db.update(users).set({ data: newLocations }).where(eq(users.userId, user.id))
+			try {
+				await db.update(users).set({ data: newLocations }).where(eq(users.userId, user.id))
+			} catch (error) {
+				console.error('Database query error in remove action:', error)
+				return fail(500, { message: 'Failed to remove location' })
+			}
 		}
 
 		return { success: true }
@@ -110,9 +126,7 @@ export const actions: Actions = {
 
 		const orderData: { id: number; order: number }[] = JSON.parse(orderDataStr)
 
-		const record = await db.query.users.findFirst({
-			where: eq(users.userId, user.id),
-		})
+		const record = user?.id && (await getUser(user.id))
 
 		if (record) {
 			const currentLocations = (record.data as SavedLocation[]) || []
@@ -123,7 +137,12 @@ export const actions: Actions = {
 				return orderA - orderB
 			})
 
-			await db.update(users).set({ data: newLocations }).where(eq(users.userId, user.id))
+			try {
+				await db.update(users).set({ data: newLocations }).where(eq(users.userId, user.id))
+			} catch (error) {
+				console.error('Database query error in reorder action:', error)
+				return fail(500, { message: 'Failed to reorder locations' })
+			}
 		}
 
 		return { success: true }

@@ -8,11 +8,15 @@ export const load: LayoutServerLoad = async ({ locals: { safeGetSession, isDemo 
 
 	let scale = 'C'
 	if (user) {
-		const record = await db.query.users.findFirst({
-			where: eq(users.userId, user.id),
-		})
-		if (record?.scale) {
-			scale = record.scale
+		try {
+			const record = await db.query.users.findFirst({
+				where: eq(users.userId, user.id),
+			})
+			if (record?.scale) {
+				scale = record.scale
+			}
+		} catch (error) {
+			console.error('Database query error in layout load:', error)
 		}
 	}
 

@@ -16,18 +16,26 @@ export const actions: Actions = {
 
 		const location = JSON.parse(locationStr) as SavedLocation
 
-		const record = await db.query.users.findFirst({
-			where: eq(users.userId, user.id),
-		})
+		let record
+		try {
+			record = await db.query.users.findFirst({
+				where: eq(users.userId, user.id),
+			})
+		} catch (error) {
+			console.error('Database query error in browser add action:', error)
+			return fail(500, { message: 'Failed to retrieve user data' })
+		}
 
 		if (record) {
 			const currentLocations = (record.data as SavedLocation[]) || []
 			if (!currentLocations.some((loc) => loc.id === location.id)) {
 				const updatedLocations = [...currentLocations, location]
-				await db
-					.update(users)
-					.set({ data: updatedLocations })
-					.where(eq(users.userId, user.id))
+				try {
+					await db.update(users).set({ data: updatedLocations }).where(eq(users.userId, user.id))
+				} catch (error) {
+					console.error('Database query error in browser add update:', error)
+					return fail(500, { message: 'Failed to update locations' })
+				}
 			}
 		}
 

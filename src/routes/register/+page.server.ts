@@ -36,13 +36,24 @@ export const actions: Actions = {
 			})
 		}
 
-		const { data, error } = await supabase.auth.signUp({
-			email,
-			password,
-			options: {
-				emailRedirectTo: url.origin,
-			},
-		})
+		let signUpResult
+		try {
+			signUpResult = await supabase.auth.signUp({
+				email,
+				password,
+				options: {
+					emailRedirectTo: url.origin,
+				},
+			})
+		} catch (error) {
+			console.error('Database query error in signUp:', error)
+			return fail(500, {
+				error: 'An unexpected error occurred during registration',
+				email,
+			})
+		}
+
+		const { data, error } = signUpResult
 
 		if (error) {
 			return fail(400, {
@@ -91,11 +102,19 @@ export const actions: Actions = {
 				}
 			}
 
-			await db.insert(users).values({
-				userId: data.user.id,
-				scale: 'C',
-				data: initialLocations,
-			})
+			try {
+				await db.insert(users).values({
+					userId: data.user.id,
+					scale: 'C',
+					data: initialLocations,
+				})
+			} catch (error) {
+				console.error('Database query error in register insert:', error)
+				return fail(500, {
+					error: 'Failed to create user record',
+					email,
+				})
+			}
 		}
 
 		const redirectTo = formData.get('redirectTo') as string

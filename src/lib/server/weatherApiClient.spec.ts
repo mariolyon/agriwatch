@@ -98,7 +98,9 @@ describe('weatherApiClient', () => {
 		expect(global.fetch).toHaveBeenCalledTimes(1)
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
-		expect(fetchUrl.searchParams.get('daily')).toBe('temperature_2m_max,temperature_2m_min,precipitation_sum')
+		expect(fetchUrl.searchParams.get('daily')).toBe(
+			'temperature_2m_max,temperature_2m_min,precipitation_sum'
+		)
 
 		expect(result).toEqual({
 			temp: { C: 21, F: 69 },

@@ -94,7 +94,9 @@
 	>
 		<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
 		{#if weather}
-			<div class="location__current-temp flex items-baseline gap-2 text-2xl font-semibold text-gray-800">
+			<div
+				class="location__current-temp flex items-baseline gap-2 text-2xl font-semibold text-gray-800"
+			>
 				<Temperature value={weather.temp[scale]} />
 				<div class="relative">
 					<button
@@ -155,6 +157,6 @@
 	}
 
 	.location__time-display {
-		@apply border-b border-dotted border-gray-400 cursor-pointer;
+		@apply cursor-pointer border-b border-dotted border-gray-400;
 	}
 </style>

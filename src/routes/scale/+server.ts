@@ -14,14 +14,25 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const scale = data.get('scale')?.toString()
 
 	if (scale === 'C' || scale === 'F') {
-		const record = await db.query.users.findFirst({
-			where: eq(users.userId, user.id),
-		})
+		let record
+		try {
+			record = await db.query.users.findFirst({
+				where: eq(users.userId, user.id),
+			})
+		} catch (error) {
+			console.error('Database query error in scale findFirst:', error)
+			return json({ type: 'error', message: 'Failed to retrieve user settings' }, { status: 500 })
+		}
 
-		if (record) {
-			await db.update(users).set({ scale }).where(eq(users.userId, user.id))
-		} else {
-			await db.insert(users).values({ userId: user.id, scale, data: [] })
+		try {
+			if (record) {
+				await db.update(users).set({ scale }).where(eq(users.userId, user.id))
+			} else {
+				await db.insert(users).values({ userId: user.id, scale, data: [] })
+			}
+		} catch (error) {
+			console.error('Database query error in scale update/insert:', error)
+			return json({ type: 'error', message: 'Failed to save user settings' }, { status: 500 })
 		}
 	}
 

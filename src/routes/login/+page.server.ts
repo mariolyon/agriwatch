@@ -24,14 +24,22 @@ export const actions: Actions = {
 			})
 		}
 
-		const { error } = await supabase.auth.signInWithPassword({
-			email,
-			password,
-		})
+		try {
+			const { error } = await supabase.auth.signInWithPassword({
+				email,
+				password,
+			})
 
-		if (error) {
-			return fail(400, {
-				error: error.message,
+			if (error) {
+				return fail(400, {
+					error: error.message,
+					email,
+				})
+			}
+		} catch (error) {
+			console.error('Database query error in login action:', error)
+			return fail(500, {
+				error: 'An unexpected error occurred during login',
 				email,
 			})
 		}

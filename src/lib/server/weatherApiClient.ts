@@ -64,18 +64,18 @@ export async function getWeather(
 			currentC = data.current.temperature_2m
 		}
 
-		const currentF = (currentC * 9 / 5) + 32
+		const currentF = (currentC * 9) / 5 + 32
 
 		const next = []
 		if (forecast && data.daily) {
 			for (let i = 0; i < data.daily.time.length; i++) {
 				const maxC = data.daily.temperature_2m_max[i]
 				const minC = data.daily.temperature_2m_min[i]
-					const precipitation = data.daily.precipitation_sum[i] || 0
+				const precipitation = data.daily.precipitation_sum[i] || 0
 				next.push({
-					max: { C: Math.round(maxC), F: Math.round((maxC * 9/5) + 32) },
-					min: { C: Math.round(minC), F: Math.round((minC * 9/5) + 32) },
-						precipitation,
+					max: { C: Math.round(maxC), F: Math.round((maxC * 9) / 5 + 32) },
+					min: { C: Math.round(minC), F: Math.round((minC * 9) / 5 + 32) },
+					precipitation,
 				})
 			}
 		}

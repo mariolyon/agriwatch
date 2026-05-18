@@ -125,13 +125,17 @@
 	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="dashboard__toggles flex gap-2">
 			<button
-				class="dashboard__toggle-btn {displayOptions.temperature ? 'dashboard__toggle-btn--active' : ''}"
+				class="dashboard__toggle-btn {displayOptions.temperature
+					? 'dashboard__toggle-btn--active'
+					: ''}"
 				onclick={() => toggleOption('temperature')}
 			>
 				Temperature
 			</button>
 			<button
-				class="dashboard__toggle-btn {displayOptions.precipitation ? 'dashboard__toggle-btn--active' : ''}"
+				class="dashboard__toggle-btn {displayOptions.precipitation
+					? 'dashboard__toggle-btn--active'
+					: ''}"
 				onclick={() => toggleOption('precipitation')}
 			>
 				Precipitation
@@ -151,9 +155,9 @@
 
 	<LocationsList
 		{locations}
-		weatherData={weatherData}
+		{weatherData}
 		scale={scaleState.current}
-		displayOptions={displayOptions}
+		{displayOptions}
 		selectedTime={data.selectedTime}
 		onTimeChange={handleTimeChange}
 		onremove={removeLocation}

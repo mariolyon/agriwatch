@@ -16,4 +16,3 @@ export const locations = pgTable('locations', {
 	admin1: text('admin1'),
 	timezone: text('timezone').notNull(),
 })
-
