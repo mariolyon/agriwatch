@@ -77,7 +77,7 @@
 	function formatDate(offsetDays: number = 0): string {
 		const date = new Date(effectiveTime)
 		date.setDate(date.getDate() + offsetDays)
-		return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+		return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
 	}
 
 	// Format effectiveTime for input value (YYYY-MM-DDTHH:mm)
@@ -86,13 +86,27 @@
 		const pad = (n: number) => n.toString().padStart(2, '0')
 		return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 	})
+
+	let timezoneOffset = $derived.by(() => {
+		try {
+			const parts = new Intl.DateTimeFormat('en-GB', {
+				timeZone: location.timezone,
+				timeZoneName: 'shortOffset',
+			}).formatToParts(effectiveTime)
+			return parts.find((p) => p.type === 'timeZoneName')?.value || location.timezone
+		} catch (e) {
+			return location.timezone
+		}
+	})
 </script>
 
 <div class="location">
 	<div
 		class="location__header flex items-center justify-between sm:flex-col sm:items-start sm:justify-start sm:gap-1"
 	>
-		<h1 class="location__city-name text-left text-3xl font-bold">{location.name}</h1>
+		<h1 class="location__city-name text-left text-3xl font-bold">
+			{location.name} <span class="text-lg font-normal text-gray-500">({timezoneOffset})</span>
+		</h1>
 		{#if weather}
 			<div
 				class="location__current-temp flex items-baseline gap-2 text-2xl font-semibold text-gray-800"

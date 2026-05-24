@@ -23,7 +23,7 @@ describe('Location component', () => {
 			},
 		})
 
-		await expect.element(getByText('London')).toBeVisible()
+		await expect.element(getByText('London (GMT)')).toBeVisible()
 	})
 
 	it('renders weather information when provided', async () => {
@@ -49,6 +49,12 @@ describe('Location component', () => {
 			month: 'short',
 			timeZone: 'GMT',
 		})
+		const expectedForecastDate = today.toLocaleDateString('en-GB', {
+			weekday: 'short',
+			day: 'numeric',
+			month: 'short',
+			timeZone: 'GMT',
+		})
 		const expectedTime = today.toLocaleTimeString('en-GB', {
 			hour: '2-digit',
 			minute: '2-digit',
@@ -56,7 +62,7 @@ describe('Location component', () => {
 		})
 
 		await expect.element(getByText(`${expectedDate}, ${expectedTime}`)).toBeVisible()
-		await expect.element(getByText(`${expectedDate}`, { exact: true })).toBeVisible()
+		await expect.element(getByText(`${expectedForecastDate}`, { exact: true })).toBeVisible()
 
 		await expect.element(getByText('20°')).toBeVisible()
 		await expect.element(getByText('15° - 25°')).toBeVisible()
@@ -100,7 +106,7 @@ describe('Location component', () => {
 			},
 		})
 
-		await expect.element(getByText('London')).toBeVisible()
+		await expect.element(getByText('London (GMT)')).toBeVisible()
 	})
 
 	it('renders both temperature and precipitation when both options are enabled', async () => {
@@ -152,6 +158,6 @@ describe('Location component', () => {
 		// 20 May 2026, 14:30 (GMT)
 		await expect.element(getByText('20 May, 14:30')).toBeVisible()
 		// Forecast date for day 0
-		await expect.element(getByText('20 May', { exact: true })).toBeVisible()
+		await expect.element(getByText('Wed 20 May', { exact: true })).toBeVisible()
 	})
 })

@@ -121,9 +121,9 @@
 	}
 </script>
 
-<main class="dashboard flex flex-1 flex-col p-3 sm:p-4">
-	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-		<div class="dashboard__toggles flex gap-2">
+<main class="dashboard">
+	<header class="dashboard__header">
+		<div class="dashboard__toggles">
 			<button
 				class="dashboard__toggle-btn {displayOptions.temperature
 					? 'dashboard__toggle-btn--active'
@@ -169,36 +169,42 @@
 	@reference "tailwindcss";
 
 	.dashboard {
-		&__toggles {
-			@apply flex rounded-lg bg-gray-100 p-1;
+		@apply flex flex-1 flex-col p-3 sm:p-4;
+	}
+
+	.dashboard__header {
+		@apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+	}
+
+	.dashboard__toggles {
+		@apply flex gap-2 rounded-lg bg-gray-100 p-1;
+	}
+
+	.dashboard__toggle-btn {
+		@apply rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors;
+
+		&:hover {
+			@apply bg-gray-200 text-gray-900;
+		}
+	}
+
+	.dashboard__toggle-btn--active {
+		@apply bg-green-600 text-white shadow-md font-bold;
+
+		&:hover {
+			@apply bg-green-700 text-white;
+		}
+	}
+
+	.dashboard__add-btn {
+		@apply rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors;
+
+		&:hover {
+			@apply bg-green-700;
 		}
 
-		&__toggle-btn {
-			@apply rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors;
-
-			&:hover {
-				@apply bg-gray-200 text-gray-900;
-			}
-
-			&--active {
-				@apply bg-white text-gray-900 shadow-sm;
-
-				&:hover {
-					@apply bg-white text-gray-900;
-				}
-			}
-		}
-
-		&__add-btn {
-			@apply rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors;
-
-			&:hover {
-				@apply bg-green-700;
-			}
-
-			&:focus-visible {
-				@apply ring-2 ring-green-300 outline-none;
-			}
+		&:focus-visible {
+			@apply ring-2 ring-green-300 outline-none;
 		}
 	}
 </style>

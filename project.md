@@ -74,7 +74,7 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 ### Location component
 
-The Location component should call the Location information function, which will be shown within the component.
+The Location component should call the Location information function, which will be shown within the component. It should display the location's name with its active GMT offset code in parentheses next to it (e.g., `London (GMT+0)`). It should also render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`).
 
 ### Authentication
 
