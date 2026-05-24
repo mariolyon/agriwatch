@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Temperature from './Temperature.svelte'
 	import WeatherIcon from './WeatherIcon.svelte'
-	import { getWeatherDescription } from '$lib/utils/weather'
+	import { getWeatherDescription, getTemperatureColorClass, getTemperatureColorHex } from '$lib/utils/weather'
 	import { Scale, type DisplayOptions, type Reading } from '$lib/types/weather'
 
 	interface Props {
@@ -35,29 +35,20 @@
 		return undefined
 	})
 
-	// Map average temperature to the requested border color scheme
-	let borderColorClass = $derived.by(() => {
-		if (avgTempC === undefined) return 'border-gray-200'
-		if (avgTempC < -10) return 'border-slate-300' // White / Grey
-		if (avgTempC < 0) return 'border-blue-800' // Dark Blue
-		if (avgTempC < 5) return 'border-sky-300' // Light Blue
-		if (avgTempC < 10) return 'border-emerald-500' // Green
-		if (avgTempC < 20) return 'border-amber-400' // Yellow
-		if (avgTempC < 30) return 'border-orange-500' // Orange
-		if (avgTempC < 40) return 'border-red-500' // Red
-		return 'border-fuchsia-600' // Magenta/Pink (Over 40)
-	})
+	let iconColorClass = $derived(getTemperatureColorClass(avgTempC))
+	let minColorHex = $derived(getTemperatureColorHex(minTemp?.[Scale.C]))
+	let maxColorHex = $derived(getTemperatureColorHex(maxTemp?.[Scale.C]))
 </script>
 
 <div
-	class="flex w-[11ch] shrink-0 flex-col items-center justify-between rounded-lg border {borderColorClass} bg-gray-50 p-3 text-center shadow-sm"
+	class="flex w-[11ch] shrink-0 flex-col items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 text-center shadow-sm"
 >
 	<div class="mb-1 text-sm font-medium text-gray-500">{date}</div>
 	{#if weatherCode !== undefined}
 		<div class="mb-2 flex flex-col items-center justify-center text-gray-500">
 			<WeatherIcon
 				code={weatherCode}
-				class="h-7 w-7 text-slate-500"
+				class="h-7 w-7"
 				title={getWeatherDescription(weatherCode)}
 			/>
 			<span
@@ -74,7 +65,17 @@
 				{#if temp !== undefined}
 					<Temperature value={temp[scale]} />
 				{:else if minTemp !== undefined && maxTemp !== undefined}
-					<Temperature value={minTemp[scale]} /> - <Temperature value={maxTemp[scale]} />
+					<div class="flex flex-col items-center gap-1 w-full">
+						<div class="flex items-center gap-1">
+							<Temperature value={minTemp[scale]} />
+							<span class={iconColorClass}>-</span>
+							<Temperature value={maxTemp[scale]} />
+						</div>
+						<div
+							class="h-[5px] w-full rounded-full"
+							style="background: linear-gradient(90deg, {minColorHex}, {maxColorHex});"
+						></div>
+					</div>
 				{/if}
 			</div>
 		{/if}

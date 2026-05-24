@@ -64,3 +64,65 @@ export function getWeatherDescription(code: number): string {
 			return 'Cloudy'
 	}
 }
+
+/**
+ * Maps a temperature in Celsius to the corresponding Tailwind text color class.
+ */
+export function getTemperatureColorClass(tempC: number | undefined): string {
+	if (tempC === undefined) {
+		return 'text-slate-500'
+	}
+	if (tempC < -10) {
+		return 'text-slate-300' // White / Grey (Bitter/Arctic cold)
+	}
+	if (tempC < 0) {
+		return 'text-blue-800' // Dark Blue (Freezing conditions)
+	}
+	if (tempC < 5) {
+		return 'text-sky-300' // Light Blue (Chilly, just above freezing)
+	}
+	if (tempC < 10) {
+		return 'text-emerald-500' // Green (Cool, crisp spring/autumn)
+	}
+	if (tempC < 20) {
+		return 'text-amber-400' // Yellow (Mild to warm)
+	}
+	if (tempC < 30) {
+		return 'text-orange-500' // Orange (Warm/Hot summer days)
+	}
+	if (tempC < 40) {
+		return 'text-red-500' // Red (Very hot)
+	}
+	return 'text-fuchsia-600' // Magenta/Pink (Extreme heatwaves)
+}
+
+/**
+ * Maps a temperature in Celsius to its corresponding hex color code.
+ */
+export function getTemperatureColorHex(tempC: number | undefined): string {
+	if (tempC === undefined) {
+		return "#64748b"; // Slate 500
+	}
+	if (tempC < -10) {
+		return "#cbd5e1"; // Slate 300
+	}
+	if (tempC < 0) {
+		return "#1e40af"; // Blue 800
+	}
+	if (tempC < 5) {
+		return "#7dd3fc"; // Sky 300
+	}
+	if (tempC < 10) {
+		return "#10b981"; // Emerald 500
+	}
+	if (tempC < 20) {
+		return "#fbbf24"; // Amber 400
+	}
+	if (tempC < 30) {
+		return "#f97316"; // Orange 500
+	}
+	if (tempC < 40) {
+		return "#ef4444"; // Red 500
+	}
+	return "#c026d3"; // Fuchsia 600
+}

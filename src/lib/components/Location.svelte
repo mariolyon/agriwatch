@@ -4,7 +4,7 @@
 	import ForecastItem from './ForecastItem.svelte'
 	import Temperature from './Temperature.svelte'
 	import WeatherIcon from './WeatherIcon.svelte'
-	import { getWeatherDescription } from '$lib/utils/weather'
+	import { getWeatherDescription, getTemperatureColorClass, getTemperatureColorHex } from '$lib/utils/weather'
 
 	interface Props {
 		location: SavedLocation
@@ -100,6 +100,9 @@
 			return location.timezone
 		}
 	})
+
+	let currentTempC = $derived(weather?.temp?.[Scale.C])
+	let currentTempHex = $derived(getTemperatureColorHex(currentTempC))
 </script>
 
 <div class="location">
@@ -113,14 +116,20 @@
 			<div
 				class="location__current-temp flex flex-wrap items-baseline gap-x-2 gap-y-1 text-2xl font-semibold text-gray-800"
 			>
+				<div class="flex flex-col items-center gap-1">
+						<Temperature value={weather.temp[scale]} />
+						<div
+							class="h-[5px] w-full rounded-full"
+							style="background: {currentTempHex};"
+						></div>
+					</div>
 				{#if weather.weatherCode !== undefined}
 					<WeatherIcon
 						code={weather.weatherCode}
-						class="h-8 w-8 shrink-0 self-center text-slate-600"
+						class="h-8 w-8 shrink-0 self-center"
 						title={getWeatherDescription(weather.weatherCode)}
 					/>
 				{/if}
-				<Temperature value={weather.temp[scale]} />
 				{#if weather.weatherCode !== undefined}
 					<span class="location__current-desc self-center text-sm font-medium text-slate-500">
 						{getWeatherDescription(weather.weatherCode)}
