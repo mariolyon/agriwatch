@@ -10,6 +10,7 @@
 		minTemp?: Reading
 		maxTemp?: Reading
 		precipitation?: number
+		windSpeed?: number
 		displayOptions?: DisplayOptions
 		weatherCode?: number
 		scale?: Scale
@@ -21,7 +22,8 @@
 		minTemp,
 		maxTemp,
 		precipitation,
-		displayOptions = { temperature: true, precipitation: false },
+		windSpeed,
+		displayOptions = { temperature: true, precipitation: false, wind: false },
 		weatherCode,
 		scale = Scale.C,
 	}: Props = $props()
@@ -82,6 +84,11 @@
 		{#if displayOptions.precipitation && precipitation !== undefined}
 			<div class="text-sm font-medium text-blue-600">
 				{precipitation} mm
+			</div>
+		{/if}
+		{#if displayOptions.wind && windSpeed !== undefined}
+			<div class="text-sm font-medium text-slate-600">
+				{windSpeed} km/h
 			</div>
 		{/if}
 	</div>

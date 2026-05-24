@@ -43,6 +43,7 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 - Should show a heading of: Locations
 - It should show a button of "Add". In normal mode, this redirects to the "Location Search screen". In Demo Mode, it redirects to the `/register` screen.
+- It should show toggle buttons for Temperature, Precipitation, and Wind to control which weather information is rendered in the forecasts.
 - When there are no saved Locations, show the text: "No Locations Saved"
 - When there are saved locations, Location components should be shown in rows vertically, one under the other
 - should allow the drag and drop of the Location cards to allow the order to change
@@ -76,7 +77,7 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 The Location component should call the Location information function, which will be shown within the component. It should display the location's name with its active GMT offset code in parentheses next to it (e.g., `London (GMT+0)`). It should also show the overall current weather for the location, including the current temperature rendered leftmost, followed by a corresponding weather icon, current verbal description, and time display.
 
-Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). Daily forecast panels use a neutral gray border (`border-gray-200`).
+Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. Depending on the active display options, each forecast item can render its temperature range, precipitation, or wind speed (e.g., `15.5 km/h`). To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). Daily forecast panels use a neutral gray border (`border-gray-200`).
 
 #### Weather Icons Styling
 All weather icons are rendered with neutral base styling, featuring specific colored sub-elements:

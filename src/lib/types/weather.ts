@@ -8,6 +8,7 @@ export interface Forecast {
 	max: Reading
 	min: Reading
 	precipitation?: number
+	windSpeed?: number
 	weatherCode?: number
 }
 
@@ -24,4 +25,5 @@ export enum Scale {
 export interface DisplayOptions {
 	temperature: boolean
 	precipitation: boolean
+	wind: boolean
 }

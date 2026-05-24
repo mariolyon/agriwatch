@@ -20,7 +20,7 @@
 		location,
 		weather,
 		scale = Scale.C,
-		displayOptions = { temperature: true, precipitation: false },
+		displayOptions = { temperature: true, precipitation: false, wind: false },
 		sharedScroll = { left: 0 },
 		selectedTime,
 		onTimeChange,
@@ -168,6 +168,7 @@
 						minTemp={forecast.min}
 						maxTemp={forecast.max}
 						precipitation={forecast.precipitation}
+							windSpeed={forecast.windSpeed}
 						{displayOptions}
 						weatherCode={forecast.weatherCode} {scale}
 					/>

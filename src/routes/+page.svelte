@@ -14,6 +14,7 @@
 	let displayOptions = $state<DisplayOptions>({
 		temperature: true,
 		precipitation: false,
+		wind: false,
 	})
 
 	async function fetchWeatherForLocations(locs: SavedLocation[]) {
@@ -139,6 +140,14 @@
 				onclick={() => toggleOption('precipitation')}
 			>
 				Precipitation
+			</button>
+			<button
+				class="dashboard__toggle-btn {displayOptions.wind
+					? 'dashboard__toggle-btn--active'
+					: ''}"
+				onclick={() => toggleOption('wind')}
+			>
+				Wind
 			</button>
 		</div>
 		{#if data.isDemo}

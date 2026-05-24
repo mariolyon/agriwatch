@@ -124,12 +124,33 @@ describe('Location component', () => {
 			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
 			weather,
 			scale: Scale.C,
-			displayOptions: { temperature: true, precipitation: true },
+			displayOptions: { temperature: true, precipitation: true, wind: false },
 		})
 
 		await expect.element(getByText('20°')).toBeVisible()
 		await expect.element(getByText('15° - 25°')).toBeVisible()
 		await expect.element(getByText('5.5 mm')).toBeVisible()
+		})
+
+		it('renders wind speed when wind option is enabled', async () => {
+			const location = {
+				id: 1,
+				name: 'London',
+			}
+
+			const weather = {
+				temp: { C: 20, F: 68 },
+				next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 }, windSpeed: 15.5 }],
+			}
+
+			const { getByText } = render(Location, {
+				location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
+				weather,
+				scale: Scale.C,
+				displayOptions: { temperature: false, precipitation: false, wind: true },
+			})
+
+			await expect.element(getByText('15.5 km/h')).toBeVisible()
 	})
 
 	it('renders specific time when selectedTime is provided', async () => {
