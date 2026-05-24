@@ -76,7 +76,15 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 The Location component should call the Location information function, which will be shown within the component. It should display the location's name with its active GMT offset code in parentheses next to it (e.g., `London (GMT+0)`). It should also show the overall current weather for the location, including a corresponding weather icon, current temperature, and a verbal description (e.g., "Clear sky"). 
 
-Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). All weather icons must feature a vibrant, weather-specific color scheme (e.g., warm amber for clear sky, soft slate/blue for rain, and dark slate/yellow for thunderstorms) to make weather conditions instantly recognizable.
+Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). All weather icons must feature a vibrant, weather-specific color scheme (e.g., warm amber for clear sky, soft slate/blue for rain, and dark slate/yellow for thunderstorms) to make weather conditions instantly recognizable. Additionally, the border color of each day's forecast panel must reflect its average temperature in Celsius, using the following scale:
+- Below -10°C: White / Grey (Bitter/Arctic cold)
+- -10°C to 0°C: Dark Blue (Freezing conditions)
+- 0°C to 5°C: Light Blue (Chilly, just above freezing)
+- 5°C to 10°C: Green (Cool, crisp spring/autumn)
+- 10°C to 20°C: Yellow (Mild to warm)
+- 20°C to 30°C: Orange (Warm/Hot summer days)
+- 30°C to 40°C: Red (Very hot)
+- Over 40°C: Magenta/Pink (Extreme heatwaves / Desert heat)
 
 ### Authentication
 

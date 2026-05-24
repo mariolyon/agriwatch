@@ -156,11 +156,11 @@
 				{#each weather.next as forecast, i ('day_' + i)}
 					<ForecastItem
 						date={formatDate(i)}
-						minTemp={forecast.min[scale]}
-						maxTemp={forecast.max[scale]}
+						minTemp={forecast.min}
+						maxTemp={forecast.max}
 						precipitation={forecast.precipitation}
 						{displayOptions}
-						weatherCode={forecast.weatherCode}
+						weatherCode={forecast.weatherCode} {scale}
 					/>
 				{/each}
 			</div>
