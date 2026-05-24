@@ -23,7 +23,7 @@ describe('Location component', () => {
 			},
 		})
 
-		await expect.element(getByText('London (GMT)')).toBeVisible()
+		await expect.element(getByText('London')).toBeVisible()
 	})
 
 	it('renders weather information when provided', async () => {
@@ -61,7 +61,7 @@ describe('Location component', () => {
 			timeZone: 'GMT',
 		})
 
-		await expect.element(getByText(`${expectedDate}, ${expectedTime}`)).toBeVisible()
+		await expect.element(getByText(`${expectedDate}, ${expectedTime} (GMT)`)).toBeVisible()
 		await expect.element(getByText(`${expectedForecastDate}`, { exact: true })).toBeVisible()
 
 		await expect.element(getByText('20°')).toBeVisible()
@@ -106,7 +106,7 @@ describe('Location component', () => {
 			},
 		})
 
-		await expect.element(getByText('London (GMT)')).toBeVisible()
+		await expect.element(getByText('London')).toBeVisible()
 	})
 
 	it('renders both temperature and precipitation when both options are enabled', async () => {
@@ -124,33 +124,33 @@ describe('Location component', () => {
 			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
 			weather,
 			scale: Scale.C,
-			displayOptions: { temperature: true, precipitation: true, wind: false },
+			displayOptions: { temperature: true, precipitation: true, wind: false, uvIndex: false },
 		})
 
 		await expect.element(getByText('20°')).toBeVisible()
 		await expect.element(getByText('15° - 25°')).toBeVisible()
 		await expect.element(getByText('5.5 mm')).toBeVisible()
+	})
+
+	it('renders wind speed when wind option is enabled', async () => {
+		const location = {
+			id: 1,
+			name: 'London',
+		}
+
+		const weather = {
+			temp: { C: 20, F: 68 },
+			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 }, windSpeed: 15.5 }],
+		}
+
+		const { getByText } = render(Location, {
+			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
+			weather,
+			scale: Scale.C,
+			displayOptions: { temperature: false, precipitation: false, wind: true, uvIndex: false },
 		})
 
-		it('renders wind speed when wind option is enabled', async () => {
-			const location = {
-				id: 1,
-				name: 'London',
-			}
-
-			const weather = {
-				temp: { C: 20, F: 68 },
-				next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 }, windSpeed: 15.5 }],
-			}
-
-			const { getByText } = render(Location, {
-				location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
-				weather,
-				scale: Scale.C,
-				displayOptions: { temperature: false, precipitation: false, wind: true },
-			})
-
-			await expect.element(getByText('15.5 km/h')).toBeVisible()
+		await expect.element(getByText('15.5 km/h')).toBeVisible()
 	})
 
 	it('renders specific time when selectedTime is provided', async () => {
@@ -177,7 +177,7 @@ describe('Location component', () => {
 		})
 
 		// 20 May 2026, 14:30 (GMT)
-		await expect.element(getByText('20 May, 14:30')).toBeVisible()
+		await expect.element(getByText('20 May, 14:30 (GMT)')).toBeVisible()
 		// Forecast date for day 0
 		await expect.element(getByText('Wed 20 May', { exact: true })).toBeVisible()
 	})
@@ -210,5 +210,26 @@ describe('Location component', () => {
 		// Verify that verbal descriptions are displayed
 		await expect.element(getByText('Clear sky')).toBeVisible()
 		await expect.element(getByText('Slight rain')).toBeVisible()
+	})
+
+	it('renders UV index when UV index option is enabled', async () => {
+		const location = {
+			id: 1,
+			name: 'London',
+		}
+
+		const weather = {
+			temp: { C: 20, F: 68 },
+			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 }, uvIndex: 5.5 }],
+		}
+
+		const { getByText } = render(Location, {
+			location: { ...location, country: 'UK', latitude: 0, longitude: 0, timezone: 'GMT' },
+			weather,
+			scale: Scale.C,
+			displayOptions: { temperature: false, precipitation: false, wind: false, uvIndex: true },
+		})
+
+		await expect.element(getByText('UV 5.5')).toBeVisible()
 	})
 })

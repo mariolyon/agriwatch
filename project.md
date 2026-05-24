@@ -43,7 +43,7 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 - Should show a heading of: Locations
 - It should show a button of "Add". In normal mode, this redirects to the "Location Search screen". In Demo Mode, it redirects to the `/register` screen.
-- It should show toggle buttons for Temperature, Precipitation, and Wind to control which weather information is rendered in the forecasts.
+- It should show toggle buttons for Temperature, Precipitation, Wind, and UV Index to control which weather information is rendered in the forecasts.
 - When there are no saved Locations, show the text: "No Locations Saved"
 - When there are saved locations, Location components should be shown in rows vertically, one under the other
 - should allow the drag and drop of the Location cards to allow the order to change
@@ -75,19 +75,23 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 ### Location component
 
-The Location component should call the Location information function, which will be shown within the component. It should display the location's name with its active GMT offset code in parentheses next to it (e.g., `London (GMT+0)`). It should also show the overall current weather for the location, including the current temperature rendered leftmost, followed by a corresponding weather icon, current verbal description, and time display.
+The Location component should call the Location information function, which will be shown within the component. It should display the location's name. It should also show the overall current weather for the location, including the current temperature rendered leftmost, followed by a corresponding weather icon, current verbal description, and time display with its active GMT offset code in parentheses next to it (e.g., `24 May, 12:00 (GMT+0)`).
 
-Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. Depending on the active display options, each forecast item can render its temperature range, precipitation, or wind speed (e.g., `15.5 km/h`). To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). Daily forecast panels use a neutral gray border (`border-gray-200`).
+Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. Depending on the active display options, each forecast item can render its temperature range, precipitation, wind speed (e.g., `15.5 km/h`), or UV Index (e.g., `UV 5.5`). To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). Daily forecast panels use a neutral gray border (`border-gray-200`).
 
 #### Weather Icons Styling
+
 All weather icons are rendered with neutral base styling, featuring specific colored sub-elements:
+
 - Clouds: Gray outline (`stroke-slate-400` with white fills)
 - Raindrops (drizzle, rain, heavy rain): Blue (`stroke-blue-500`)
 - Lightning (thunderstorm): Yellow outline (`stroke-amber-500` with white fill)
 - Sun (clear sky, mainly clear, partly cloudy): Neutral outline with white fill
 
 #### Temperature Visual Cues (Underlines)
+
 Temperature numbers themselves are rendered in neutral text, but they feature dynamic 5px thick underlines that reflect the following Celsius temperature scale:
+
 - Below -10°C: `#cbd5e1` (Slate/Grey - Bitter/Arctic cold)
 - -10°C to 0°C: `#1e40af` (Dark Blue - Freezing conditions)
 - 0°C to 5°C: `#7dd3fc` (Light Blue - Chilly, just above freezing)
@@ -98,6 +102,7 @@ Temperature numbers themselves are rendered in neutral text, but they feature dy
 - Over 40°C: `#c026d3` (Magenta/Pink - Extreme heatwaves)
 
 Underlines are displayed as follows:
+
 - **Current Temperature**: Solid 5px thick underline matching its current Celsius value.
 - **Daily Temperature Range**: 5px thick underline styled as a linear gradient from the hex color of the lowest (min) temperature to the hex color of the highest (max) temperature.
 

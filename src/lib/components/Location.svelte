@@ -4,7 +4,11 @@
 	import ForecastItem from './ForecastItem.svelte'
 	import Temperature from './Temperature.svelte'
 	import WeatherIcon from './WeatherIcon.svelte'
-	import { getWeatherDescription, getTemperatureColorClass, getTemperatureColorHex } from '$lib/utils/weather'
+	import {
+		getWeatherDescription,
+		getTemperatureColorClass,
+		getTemperatureColorHex,
+	} from '$lib/utils/weather'
 
 	interface Props {
 		location: SavedLocation
@@ -20,7 +24,7 @@
 		location,
 		weather,
 		scale = Scale.C,
-		displayOptions = { temperature: true, precipitation: false, wind: false },
+		displayOptions = { temperature: true, precipitation: false, wind: false, uvIndex: false },
 		sharedScroll = { left: 0 },
 		selectedTime,
 		onTimeChange,
@@ -110,19 +114,16 @@
 		class="location__header flex items-center justify-between sm:flex-col sm:items-start sm:justify-start sm:gap-1"
 	>
 		<h1 class="location__city-name text-left text-3xl font-bold">
-			{location.name} <span class="text-lg font-normal text-gray-500">({timezoneOffset})</span>
+			{location.name}
 		</h1>
 		{#if weather}
 			<div
 				class="location__current-temp flex flex-wrap items-baseline gap-x-2 gap-y-1 text-2xl font-semibold text-gray-800"
 			>
 				<div class="flex flex-col items-center gap-1">
-						<Temperature value={weather.temp[scale]} />
-						<div
-							class="h-[5px] w-full rounded-full"
-							style="background: {currentTempHex};"
-						></div>
-					</div>
+					<Temperature value={weather.temp[scale]} />
+					<div class="h-[5px] w-full rounded-full" style="background: {currentTempHex};"></div>
+				</div>
 				{#if weather.weatherCode !== undefined}
 					<WeatherIcon
 						code={weather.weatherCode}
@@ -143,7 +144,7 @@
 							input?.showPicker()
 						}}
 					>
-						{currentDateTime}
+						{currentDateTime} ({timezoneOffset})
 					</button>
 					<input
 						type="datetime-local"
@@ -168,9 +169,11 @@
 						minTemp={forecast.min}
 						maxTemp={forecast.max}
 						precipitation={forecast.precipitation}
-							windSpeed={forecast.windSpeed}
+						windSpeed={forecast.windSpeed}
+						uvIndex={forecast.uvIndex}
 						{displayOptions}
-						weatherCode={forecast.weatherCode} {scale}
+						weatherCode={forecast.weatherCode}
+						{scale}
 					/>
 				{/each}
 			</div>

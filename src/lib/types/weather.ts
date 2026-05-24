@@ -9,6 +9,7 @@ export interface Forecast {
 	min: Reading
 	precipitation?: number
 	windSpeed?: number
+	uvIndex?: number
 	weatherCode?: number
 }
 
@@ -26,4 +27,5 @@ export interface DisplayOptions {
 	temperature: boolean
 	precipitation: boolean
 	wind: boolean
+	uvIndex: boolean
 }

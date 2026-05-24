@@ -1,7 +1,11 @@
 <script lang="ts">
 	import Temperature from './Temperature.svelte'
 	import WeatherIcon from './WeatherIcon.svelte'
-	import { getWeatherDescription, getTemperatureColorClass, getTemperatureColorHex } from '$lib/utils/weather'
+	import {
+		getWeatherDescription,
+		getTemperatureColorClass,
+		getTemperatureColorHex,
+	} from '$lib/utils/weather'
 	import { Scale, type DisplayOptions, type Reading } from '$lib/types/weather'
 
 	interface Props {
@@ -11,6 +15,7 @@
 		maxTemp?: Reading
 		precipitation?: number
 		windSpeed?: number
+		uvIndex?: number
 		displayOptions?: DisplayOptions
 		weatherCode?: number
 		scale?: Scale
@@ -23,7 +28,8 @@
 		maxTemp,
 		precipitation,
 		windSpeed,
-		displayOptions = { temperature: true, precipitation: false, wind: false },
+		uvIndex,
+		displayOptions = { temperature: true, precipitation: false, wind: false, uvIndex: false },
 		weatherCode,
 		scale = Scale.C,
 	}: Props = $props()
@@ -48,11 +54,7 @@
 	<div class="mb-1 text-sm font-medium text-gray-500">{date}</div>
 	{#if weatherCode !== undefined}
 		<div class="mb-2 flex flex-col items-center justify-center text-gray-500">
-			<WeatherIcon
-				code={weatherCode}
-				class="h-7 w-7"
-				title={getWeatherDescription(weatherCode)}
-			/>
+			<WeatherIcon code={weatherCode} class="h-7 w-7" title={getWeatherDescription(weatherCode)} />
 			<span
 				class="mt-1 overflow-hidden px-1 text-[10px] font-semibold text-clip whitespace-nowrap text-slate-400"
 				title={getWeatherDescription(weatherCode)}
@@ -67,7 +69,7 @@
 				{#if temp !== undefined}
 					<Temperature value={temp[scale]} />
 				{:else if minTemp !== undefined && maxTemp !== undefined}
-					<div class="flex flex-col items-center gap-1 w-full">
+					<div class="flex w-full flex-col items-center gap-1">
 						<div class="flex items-center gap-1">
 							<Temperature value={minTemp[scale]} />
 							<span class={iconColorClass}>-</span>
@@ -89,6 +91,11 @@
 		{#if displayOptions.wind && windSpeed !== undefined}
 			<div class="text-sm font-medium text-slate-600">
 				{windSpeed} km/h
+			</div>
+		{/if}
+		{#if displayOptions.uvIndex && uvIndex !== undefined}
+			<div class="text-sm font-medium text-amber-600">
+				UV {uvIndex}
 			</div>
 		{/if}
 	</div>

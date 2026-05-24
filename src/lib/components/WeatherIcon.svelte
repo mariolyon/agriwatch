@@ -17,10 +17,7 @@
 		if (code === 3) return 'overcast' // Overcast
 		if (code === 45 || code === 48) return 'fog' // Fog
 		if (code >= 51 && code <= 57) return 'drizzle' // Drizzle
-		if (
-			code === 61 || code === 63 || code === 66 ||
-			code === 80 || code === 81
-		) {
+		if (code === 61 || code === 63 || code === 66 || code === 80 || code === 81) {
 			return 'rain'
 		}
 		if (code === 65 || code === 67 || code === 82) {
@@ -75,7 +72,7 @@
 	>
 		<!-- Small Cloud in background (gray) -->
 		<path
-			class="stroke-slate-400 fill-white"
+			class="fill-white stroke-slate-400"
 			transform="translate(6, 6) scale(0.6)"
 			d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-1.95-3-4-3-2.6 0-4.67 1.83-5 4.5-2 .41-3.5 2-3.5 4a3.5 3.5 0 0 0 3.5 3.5z"
 		/>
@@ -110,7 +107,7 @@
 		<path d="m19.07 4.93-1.41 1.41" />
 		<path class="fill-white" d="M15.947 12.65a4 4 0 0 0-5.925-4.128" />
 		<!-- Cloud in foreground (gray) -->
-		<path class="stroke-slate-400 fill-white" d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z" />
+		<path class="fill-white stroke-slate-400" d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z" />
 	</svg>
 {:else if type === 'overcast'}
 	<!-- Overcast (Overlapping Clouds [gray]) -->
@@ -251,7 +248,7 @@
 			class="fill-white"
 			d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-1.95-3-4-3-2.6 0-4.67 1.83-5 4.5-2 .41-3.5 2-3.5 4a3.5 3.5 0 0 0 3.5 3.5z"
 		/>
-		<path class="stroke-amber-500 fill-white" d="m13 14-3 5h4l-3 5" />
+		<path class="fill-white stroke-amber-500" d="m13 14-3 5h4l-3 5" />
 	</svg>
 {:else}
 	<!-- Cloudy / Default Icon (Cloud [gray]) -->

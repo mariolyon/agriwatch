@@ -101,28 +101,28 @@ export function getTemperatureColorClass(tempC: number | undefined): string {
  */
 export function getTemperatureColorHex(tempC: number | undefined): string {
 	if (tempC === undefined) {
-		return "#64748b"; // Slate 500
+		return '#64748b' // Slate 500
 	}
 	if (tempC < -10) {
-		return "#cbd5e1"; // Slate 300
+		return '#cbd5e1' // Slate 300
 	}
 	if (tempC < 0) {
-		return "#1e40af"; // Blue 800
+		return '#1e40af' // Blue 800
 	}
 	if (tempC < 5) {
-		return "#7dd3fc"; // Sky 300
+		return '#7dd3fc' // Sky 300
 	}
 	if (tempC < 10) {
-		return "#10b981"; // Emerald 500
+		return '#10b981' // Emerald 500
 	}
 	if (tempC < 20) {
-		return "#fbbf24"; // Amber 400
+		return '#fbbf24' // Amber 400
 	}
 	if (tempC < 30) {
-		return "#f97316"; // Orange 500
+		return '#f97316' // Orange 500
 	}
 	if (tempC < 40) {
-		return "#ef4444"; // Red 500
+		return '#ef4444' // Red 500
 	}
-	return "#c026d3"; // Fuchsia 600
+	return '#c026d3' // Fuchsia 600
 }

@@ -36,7 +36,7 @@ export async function getWeather(
 		if (forecast) {
 			url.searchParams.set(
 				'daily',
-				'temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max,weather_code'
+				'temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max,uv_index_max,weather_code'
 			)
 		}
 		url.searchParams.set('timezone', 'auto')
@@ -78,13 +78,15 @@ export async function getWeather(
 				const maxC = data.daily.temperature_2m_max[i]
 				const minC = data.daily.temperature_2m_min[i]
 				const precipitation = data.daily.precipitation_sum[i] || 0
-					const windSpeed = data.daily.wind_speed_10m_max ? data.daily.wind_speed_10m_max[i] || 0 : 0
+				const windSpeed = data.daily.wind_speed_10m_max ? data.daily.wind_speed_10m_max[i] || 0 : 0
 				const weatherCode = data.daily.weather_code ? data.daily.weather_code[i] : 0
+				const uvIndex = data.daily.uv_index_max ? (data.daily.uv_index_max[i] ?? 0) : 0
 				next.push({
 					max: { C: Math.round(maxC), F: Math.round((maxC * 9) / 5 + 32) },
 					min: { C: Math.round(minC), F: Math.round((minC * 9) / 5 + 32) },
+					uvIndex,
 					precipitation,
-						windSpeed,
+					windSpeed,
 					weatherCode,
 				})
 			}

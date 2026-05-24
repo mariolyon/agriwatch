@@ -15,6 +15,7 @@
 		temperature: true,
 		precipitation: false,
 		wind: false,
+		uvIndex: false,
 	})
 
 	async function fetchWeatherForLocations(locs: SavedLocation[]) {
@@ -142,12 +143,18 @@
 				Precipitation
 			</button>
 			<button
-				class="dashboard__toggle-btn {displayOptions.wind
-					? 'dashboard__toggle-btn--active'
-					: ''}"
+				class="dashboard__toggle-btn {displayOptions.wind ? 'dashboard__toggle-btn--active' : ''}"
 				onclick={() => toggleOption('wind')}
 			>
 				Wind
+			</button>
+			<button
+				class="dashboard__toggle-btn {displayOptions.uvIndex
+					? 'dashboard__toggle-btn--active'
+					: ''}"
+				onclick={() => toggleOption('uvIndex')}
+			>
+				UV Index
 			</button>
 		</div>
 		{#if data.isDemo}

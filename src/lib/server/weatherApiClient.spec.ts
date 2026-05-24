@@ -88,7 +88,8 @@ describe('weatherApiClient', () => {
 							temperature_2m_max: [25.1],
 							temperature_2m_min: [15.4],
 							precipitation_sum: [5.2],
-								wind_speed_10m_max: [12.5],
+							uv_index_max: [5.5],
+							wind_speed_10m_max: [12.5],
 							weather_code: [61],
 						},
 					}),
@@ -104,12 +105,21 @@ describe('weatherApiClient', () => {
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
 		expect(fetchUrl.searchParams.get('daily')).toBe(
-			'temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max,weather_code'
+			'temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max,uv_index_max,weather_code'
 		)
 
 		expect(result).toEqual({
 			temp: { C: 21, F: 69 },
-			next: [{ max: { C: 25, F: 77 }, min: { C: 15, F: 60 }, precipitation: 5.2, windSpeed: 12.5, weatherCode: 61 }],
+			next: [
+				{
+					max: { C: 25, F: 77 },
+					min: { C: 15, F: 60 },
+					precipitation: 5.2,
+					windSpeed: 12.5,
+					uvIndex: 5.5,
+					weatherCode: 61,
+				},
+			],
 			weatherCode: 3,
 		})
 	})
@@ -196,7 +206,7 @@ describe('weatherApiClient', () => {
 							temperature_2m_max: [25.0],
 							temperature_2m_min: [15.0],
 							precipitation_sum: [0],
-								wind_speed_10m_max: [10.0],
+							wind_speed_10m_max: [10.0],
 							weather_code: [3],
 						},
 					}),
