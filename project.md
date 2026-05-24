@@ -74,7 +74,9 @@ A `/demo` route allows users to enter an anonymous session (Demo Mode) without a
 
 ### Location component
 
-The Location component should call the Location information function, which will be shown within the component. It should display the location's name with its active GMT offset code in parentheses next to it (e.g., `London (GMT+0)`). It should also render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`).
+The Location component should call the Location information function, which will be shown within the component. It should display the location's name with its active GMT offset code in parentheses next to it (e.g., `London (GMT+0)`). It should also show the overall current weather for the location, including a corresponding weather icon, current temperature, and a verbal description (e.g., "Clear sky"). 
+
+Furthermore, it should render daily weather forecast items with their short weekdays prepended to the date (e.g., `Sun 24 May`). Each forecast item must display a weather icon representing its weather condition, followed by a human-readable verbal description underneath. To prevent layout issues on small screens, any long verbal descriptions in the forecast items must be cleanly cut off at the container boundaries using text-clipping (without any ellipsis). All weather icons must feature a vibrant, weather-specific color scheme (e.g., warm amber for clear sky, soft slate/blue for rain, and dark slate/yellow for thunderstorms) to make weather conditions instantly recognizable.
 
 ### Authentication
 

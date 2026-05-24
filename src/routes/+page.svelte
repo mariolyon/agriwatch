@@ -189,7 +189,7 @@
 	}
 
 	.dashboard__toggle-btn--active {
-		@apply bg-green-600 text-white shadow-md font-bold;
+		@apply bg-green-600 font-bold text-white shadow-md;
 
 		&:hover {
 			@apply bg-green-700 text-white;

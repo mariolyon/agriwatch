@@ -160,4 +160,34 @@ describe('Location component', () => {
 		// Forecast date for day 0
 		await expect.element(getByText('Wed 20 May', { exact: true })).toBeVisible()
 	})
+
+	it('renders weather icons when weather codes are provided', async () => {
+		const location = {
+			id: 1,
+			name: 'London',
+			country: 'UK',
+			latitude: 0,
+			longitude: 0,
+			timezone: 'GMT',
+		}
+
+		const weather = {
+			temp: { C: 20, F: 68 },
+			weatherCode: 0, // Sunny
+			next: [{ min: { C: 15, F: 59 }, max: { C: 25, F: 77 }, weatherCode: 61 }], // Rain
+		}
+
+		const { container, getByText } = render(Location, {
+			location,
+			weather,
+		})
+
+		// Verify that SVG elements are present inside the rendered container
+		const svgs = container.querySelectorAll('svg')
+		expect(svgs.length).toBeGreaterThanOrEqual(2)
+
+		// Verify that verbal descriptions are displayed
+		await expect.element(getByText('Clear sky')).toBeVisible()
+		await expect.element(getByText('Slight rain')).toBeVisible()
+	})
 })

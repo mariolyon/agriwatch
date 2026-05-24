@@ -3,6 +3,8 @@
 	import { Scale, type Weather, type DisplayOptions } from '$lib/types/weather'
 	import ForecastItem from './ForecastItem.svelte'
 	import Temperature from './Temperature.svelte'
+	import WeatherIcon from './WeatherIcon.svelte'
+	import { getWeatherDescription } from '$lib/utils/weather'
 
 	interface Props {
 		location: SavedLocation
@@ -109,9 +111,21 @@
 		</h1>
 		{#if weather}
 			<div
-				class="location__current-temp flex items-baseline gap-2 text-2xl font-semibold text-gray-800"
+				class="location__current-temp flex flex-wrap items-baseline gap-x-2 gap-y-1 text-2xl font-semibold text-gray-800"
 			>
+				{#if weather.weatherCode !== undefined}
+					<WeatherIcon
+						code={weather.weatherCode}
+						class="h-8 w-8 shrink-0 self-center text-slate-600"
+						title={getWeatherDescription(weather.weatherCode)}
+					/>
+				{/if}
 				<Temperature value={weather.temp[scale]} />
+				{#if weather.weatherCode !== undefined}
+					<span class="location__current-desc self-center text-sm font-medium text-slate-500">
+						{getWeatherDescription(weather.weatherCode)}
+					</span>
+				{/if}
 				<div class="relative">
 					<button
 						class="location__time-display text-sm font-normal text-gray-500 hover:text-blue-600 focus:outline-none"
@@ -146,6 +160,7 @@
 						maxTemp={forecast.max[scale]}
 						precipitation={forecast.precipitation}
 						{displayOptions}
+						weatherCode={forecast.weatherCode}
 					/>
 				{/each}
 			</div>
@@ -168,6 +183,10 @@
 
 	.location__current-temp {
 		@apply sm:mt-1;
+	}
+
+	.location__current-desc {
+		@apply text-sm font-medium text-slate-500;
 	}
 
 	.location__time-display {

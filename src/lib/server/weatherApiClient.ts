@@ -28,13 +28,16 @@ export async function getWeather(
 			const endDate = new Date(date)
 			endDate.setDate(endDate.getDate() + 7)
 			url.searchParams.set('end_date', endDate.toISOString().split('T')[0])
-			url.searchParams.set('hourly', 'temperature_2m')
+			url.searchParams.set('hourly', 'temperature_2m,weather_code')
 		} else {
-			url.searchParams.set('current', 'temperature_2m')
+			url.searchParams.set('current', 'temperature_2m,weather_code')
 		}
 
 		if (forecast) {
-			url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,precipitation_sum')
+			url.searchParams.set(
+				'daily',
+				'temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code'
+			)
 		}
 		url.searchParams.set('timezone', 'auto')
 
@@ -45,6 +48,7 @@ export async function getWeather(
 		const data = await response.json()
 
 		let currentC = 0
+		let currentWeatherCode = 0
 		if (date && data.hourly) {
 			// Find the hourly temperature closest to the requested time
 			const requestedTime = date.getTime()
@@ -60,8 +64,10 @@ export async function getWeather(
 				}
 			}
 			currentC = data.hourly.temperature_2m[closestIndex]
+			currentWeatherCode = data.hourly.weather_code ? data.hourly.weather_code[closestIndex] : 0
 		} else if (data.current) {
 			currentC = data.current.temperature_2m
+			currentWeatherCode = data.current.weather_code || 0
 		}
 
 		const currentF = (currentC * 9) / 5 + 32
@@ -72,10 +78,12 @@ export async function getWeather(
 				const maxC = data.daily.temperature_2m_max[i]
 				const minC = data.daily.temperature_2m_min[i]
 				const precipitation = data.daily.precipitation_sum[i] || 0
+				const weatherCode = data.daily.weather_code ? data.daily.weather_code[i] : 0
 				next.push({
 					max: { C: Math.round(maxC), F: Math.round((maxC * 9) / 5 + 32) },
 					min: { C: Math.round(minC), F: Math.round((minC * 9) / 5 + 32) },
 					precipitation,
+					weatherCode,
 				})
 			}
 		}
@@ -86,6 +94,7 @@ export async function getWeather(
 				C: Math.round(currentC),
 			},
 			next,
+			weatherCode: currentWeatherCode,
 		}
 		return result
 	} catch (error) {

@@ -1,12 +1,14 @@
 export interface Weather {
 	temp: Reading
 	next?: Forecast[]
+	weatherCode?: number
 }
 
 export interface Forecast {
 	max: Reading
 	min: Reading
-	precipitation: number
+	precipitation?: number
+	weatherCode?: number
 }
 
 export interface Reading {

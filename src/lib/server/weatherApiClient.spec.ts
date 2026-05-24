@@ -34,6 +34,7 @@ describe('weatherApiClient', () => {
 					json: async () => ({
 						current: {
 							temperature_2m: 20.5,
+							weather_code: 3,
 						},
 					}),
 				} as Response
@@ -49,11 +50,12 @@ describe('weatherApiClient', () => {
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
 		expect(fetchUrl.searchParams.get('latitude')).toBe('51.5')
 		expect(fetchUrl.searchParams.get('longitude')).toBe('-0.1')
-		expect(fetchUrl.searchParams.get('current')).toBe('temperature_2m')
+		expect(fetchUrl.searchParams.get('current')).toBe('temperature_2m,weather_code')
 
 		expect(result).toEqual({
 			temp: { C: 21, F: 69 },
 			next: [],
+			weatherCode: 3,
 		})
 	})
 
@@ -79,12 +81,14 @@ describe('weatherApiClient', () => {
 					json: async () => ({
 						current: {
 							temperature_2m: 20.5,
+							weather_code: 3,
 						},
 						daily: {
 							time: ['2023-01-01'],
 							temperature_2m_max: [25.1],
 							temperature_2m_min: [15.4],
 							precipitation_sum: [5.2],
+							weather_code: [61],
 						},
 					}),
 				} as Response
@@ -99,12 +103,13 @@ describe('weatherApiClient', () => {
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
 		expect(fetchUrl.searchParams.get('daily')).toBe(
-			'temperature_2m_max,temperature_2m_min,precipitation_sum'
+			'temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code'
 		)
 
 		expect(result).toEqual({
 			temp: { C: 21, F: 69 },
-			next: [{ max: { C: 25, F: 77 }, min: { C: 15, F: 60 }, precipitation: 5.2 }],
+			next: [{ max: { C: 25, F: 77 }, min: { C: 15, F: 60 }, precipitation: 5.2, weatherCode: 61 }],
+			weatherCode: 3,
 		})
 	})
 
@@ -183,12 +188,14 @@ describe('weatherApiClient', () => {
 						hourly: {
 							time: ['2026-05-20T14:00', '2026-05-20T15:00'],
 							temperature_2m: [22.0, 23.0],
+							weather_code: [3, 3],
 						},
 						daily: {
 							time: ['2026-05-20'],
 							temperature_2m_max: [25.0],
 							temperature_2m_min: [15.0],
 							precipitation_sum: [0],
+							weather_code: [3],
 						},
 					}),
 				} as Response
@@ -200,8 +207,9 @@ describe('weatherApiClient', () => {
 
 		const fetchUrl = (global.fetch as any).mock.calls[0][0] as URL
 		expect(fetchUrl.searchParams.get('start_date')).toBe('2026-05-20')
-		expect(fetchUrl.searchParams.get('hourly')).toBe('temperature_2m')
+		expect(fetchUrl.searchParams.get('hourly')).toBe('temperature_2m,weather_code')
 
 		expect(result.temp.C).toBe(22)
+		expect(result.weatherCode).toBe(3)
 	})
 })
